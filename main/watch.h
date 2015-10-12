@@ -9,19 +9,19 @@
 #include "misc.h"
 
 void watch() {
-  
+  return;
 }
 
-void stopWatch() )
-
+void stopwatch() )
+  return;
 }
 
 void timer() {
-  
+  return;
 }
 
 void alarm() {
-  
+  return;
 }
 
 #endif // WATCH_H
