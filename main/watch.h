@@ -8,11 +8,11 @@
 #include "track.h"
 #include "misc.h"
 
-void watch() {
-  return;
-}
+struct alarm {
+  
+};
 
-void stopwatch() )
+void watch() {
   return;
 }
 
@@ -20,7 +20,7 @@ void timer() {
   return;
 }
 
-void alarm() {
+void setAlarm() {
   return;
 }
 

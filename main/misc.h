@@ -8,4 +8,19 @@
 #include "track.h"
 #include "watch.h"
 
+struct date {
+  int year;
+  int month;
+  int day;
+  int hour;
+  int minute;
+  int second;
+};
+
+struct date getDate() {
+  struct date now = {0, 0, 0, 0, 0, 0};
+  //TODO
+  return now;
+}
+
 #endif // MISC_H
