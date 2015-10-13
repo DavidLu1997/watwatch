@@ -19,7 +19,9 @@ struct date {
 
 struct date getDate() {
   struct date now = {0, 0, 0, 0, 0, 0};
-  //TODO
+  now.year = 2015;
+  now.month = 10;
+  now.day = 13;
   return now;
 }
 
