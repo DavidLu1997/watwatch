@@ -9,7 +9,7 @@
 #include "misc.h"
 
 struct alarm {
-  
+  struct date d;
 };
 
 void watch() {
