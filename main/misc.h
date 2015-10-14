@@ -25,4 +25,12 @@ struct date getDate() {
   return now;
 }
 
+int secondsSince(struct date a) {
+  return 0;
+}
+
+int timeElapsed(struct date a, struct date b) {
+  return 0;
+}
+
 #endif // MISC_H
