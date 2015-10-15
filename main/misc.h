@@ -30,6 +30,7 @@ int secondsSince(struct date a) {
 }
 
 int timeElapsed(struct date a, struct date b) {
+  //TODO
   return 0;
 }
 
