@@ -58,13 +58,11 @@ struct date getTimeElapsed(struct date a, struct date b) {
   return d;
 }
 
-int secondsSince(struct date a) {
-  return 0;
-}
-
+//Returns time elapsed in ms
 int timeElapsed(struct date a, struct date b) {
-  //TODO
-  return 0;
+  struct date d = getTimeElapsed(a, b);
+  
+  return d.ms + d.second * 1000 + d.minute * 60 * 1000 + d.hour * 60 * 60 * 1000 + d.day * 24 * 60 * 60 * 1000 + d.month * month[d.month-1] * 24 * 60 * 60 * 1000 + d.year * (month[d.month-1] == 29 ? 366 : 365) * 24 * 60 * 60 * 1000;
 }
 
 #endif // MISC_H
