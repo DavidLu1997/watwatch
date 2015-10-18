@@ -59,10 +59,17 @@ struct date getTimeElapsed(struct date a, struct date b) {
 }
 
 //Returns time elapsed in ms
-int timeElapsed(struct date a, struct date b) {
+int timeElapsedMs(struct date a, struct date b) {
   struct date d = getTimeElapsed(a, b);
   
   return d.ms + d.second * 1000 + d.minute * 60 * 1000 + d.hour * 60 * 60 * 1000 + d.day * 24 * 60 * 60 * 1000 + d.month * month[d.month-1] * 24 * 60 * 60 * 1000 + d.year * (month[d.month-1] == 29 ? 366 : 365) * 24 * 60 * 60 * 1000;
+}
+
+//Returns time elapsed in s
+int timeElapsedS(struct date a, struct date b) {
+  struct date d = getTimeElapsed(a, b);
+  
+  return d.ms / 1000 + d.second + d.minute * 60 + d.hour * 60 * 60 + d.day * 24 * 60 * 60 + d.month * month[d.month-1] * 24 * 60 * 60 + d.year * (month[d.month-1] == 29 ? 366 : 365) * 24 * 60 * 60;
 }
 
 #endif // MISC_H
