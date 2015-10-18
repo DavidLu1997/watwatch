@@ -46,6 +46,7 @@ struct date getDate() {
   return currentDate;
 }
 
+//Get time elapsed in date format
 struct date getTimeElapsed(struct date a, struct date b) {
   struct date d;
   d.ms = abs(b.ms - a.ms);
@@ -70,6 +71,17 @@ int timeElapsedS(struct date a, struct date b) {
   struct date d = getTimeElapsed(a, b);
   
   return d.ms / 1000 + d.second + d.minute * 60 + d.hour * 60 * 60 + d.day * 24 * 60 * 60 + d.month * month[d.month-1] * 24 * 60 * 60 + d.year * (month[d.month-1] == 29 ? 366 : 365) * 24 * 60 * 60;
+}
+
+//Returns time s seconds in the future
+struct date futureTime(struct date a, int s) {
+  a.second += s;
+  a.minute += a.second / 60;
+  a.second = a.second % 60;
+
+  //TODO rest going to bed today
+
+  return a;
 }
 
 #endif // MISC_H
