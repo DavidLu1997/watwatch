@@ -80,7 +80,7 @@ struct date futureTime(struct date a, int s) {
   a.second = a.second % 60;
 
   //TODO rest going to bed today
-
+  //TODO Do tomorrow
   return a;
 }
 
