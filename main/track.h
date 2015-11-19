@@ -20,8 +20,19 @@
 //Past range to check temperature
 #define TEMP_RANGE 500
 
+//Past Range to store heartbeat data
+#define HEART_RANGE 60000 //1 minute
+
 //Number of steps since start
 int steps = 0;
+
+//Number of heartbeats since start
+int beats = 0;
+
+//TODO: Initialize all arrays and shit
+
+//Heartbeat per second
+int heartBeats[HEART_RANGE / 1000];
 
 //Accelerometer data for past STEP_RANGE
 double data[STEP_RANGE];
@@ -69,11 +80,25 @@ int checkStep() {
 	return 0;
 }
 
+//Check temperature, continuously called, returns 1 if heartbeat occurred in past TEMP_RANGE ms
+//TEMP_DELAY
+int checkHeart() {
+	heartBeats[millis() / 1000 % HEART_RANGe]++;
+	return 0;
+}
+
 //Get accelerometer data, continuously called
 //ACCEL_DELAY
 void getData() {
 	//TODO: Get accelerometer reading
 	data[millis() % STEP_RANGE] = 0.0;
+}
+
+//Get temperature data, continuously called
+//TEMP_DELAY
+void getTemperature() {
+	//TODO: Get accelerometer reading
+	data[millis() % TEMP_RANGE] = 0.0;
 }
 
 //Get current steps
