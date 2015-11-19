@@ -7,6 +7,8 @@
 
 #include "track.h"
 #include "watch.h"
+#include "stdlib.h"
+#include "Energia.h"
 
 struct date {
   int year;
