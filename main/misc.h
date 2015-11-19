@@ -7,8 +7,36 @@
 
 #include "track.h"
 #include "watch.h"
-#include "stdlib.h"
 #include "Energia.h"
+#include "socket.h"
+
+//Receives input
+void miscInput(iint input, int selected) {
+	switch(input) {
+		case SWITCH_A:
+			//TODO: Switch A
+			break;
+		case SWITCH_B:
+			//TODO: Switch B
+			break;
+		case BUTTON_A:
+			//TODO: Button A
+			break;
+		case BUTTON_B:
+			//TODO: Button B
+			break;
+		case POT:
+			//TODO: Smoke Weed
+			break;
+		default:
+			//SUM TING WONG
+			//REALLY WONG
+			//REALLY REALLY WONG
+			//REALLY REALLY REALLY WONG
+			//RILEY WONG
+			break;
+	}
+}
 
 struct date {
   int year;

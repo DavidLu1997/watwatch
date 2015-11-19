@@ -7,12 +7,60 @@
 
 #include "track.h"
 #include "misc.h"
+#include "socket.h"
 
-struct alarm {
-  struct date d;
-};
+//Function calling delays, ms
+#define DRAW_DELAY 50
+#define TIME_DELAY 10
 
-void watch() {
+//Current date
+struct date current;
+
+//Alarms
+struct date alarms[100];
+int alarmSize = 0;
+
+//Receives input in the form of a button/switch/something pressed, and the selected item
+void watchInput(int input, int selected) {
+	switch(input) {
+		case SWITCH_A:
+			//TODO: Switch A
+			break;
+		case SWITCH_B:
+			//TODO: Switch B
+			break;
+		case BUTTON_A:
+			//TODO: Button A
+			break;
+		case BUTTON_B:
+			//TODO: Button B
+			break;
+		case POT:
+			//TODO: Smoke Weed
+			break;
+		default:
+			//SUM TING WONG
+			//REALLY WONG
+			//REALLY REALLY WONG
+			//REALLY REALLY REALLY WONG
+			//RILEY WONG
+			break;
+	}
+}
+
+//Draws current function, continuously called
+//DRAW_DELAY
+void drawWatch() {
+
+}
+
+//Checks and updates current time, continuously called
+//TIME_DELAY
+void updateTime() {
+	current = getDate();
+}
+
+void getwatch() {
   return;
 }
 
