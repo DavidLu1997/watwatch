@@ -72,13 +72,14 @@ void drawMenu() {
 }
 
 //Continuously scans for user input, passing it to process
+//DELAY
 void getInput() {
 	int input = 0;
 	//TODO: Get input
 	if(!input)
 		//SUM TING WONG
 	process(input);
-	sleep(
+	sleep(DELAY);
 }
 
 //Highlights item n
@@ -86,6 +87,5 @@ void highlightItem(int n){
 
 }
 
-//
 
 #endif //SOCKET_H

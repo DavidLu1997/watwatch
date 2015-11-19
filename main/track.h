@@ -13,6 +13,7 @@
 #define DRAW_DELAY 50
 #define STEP_DELAY 100
 #define ACCEL_DELAY 1
+#define TEMP_DELAY 1
 
 //Past range to check steps, ms
 #define STEP_RANGE 500
