@@ -24,6 +24,14 @@
 //Past Range to store heartbeat data
 #define HEART_RANGE 60000 //1 minute
 
+//Acceleration data memory locations
+#define	X_ADDR = 0x32;
+#define	Y_ADDR = 0x34;
+#define	Z_ADDR = 0x36;
+
+//Step Tracking Params
+#define STEP_SENSITIVITY = 1.0; //Higher the number = less sensitive
+
 //Number of steps since start
 int steps = 0;
 
@@ -40,6 +48,7 @@ double data[STEP_RANGE];
 
 //Temperature data for past TEMP_RANGE
 double temp[TEMP_RANGE];
+
 
 //Receives input
 void trackInput(int input, int selected) {
@@ -78,6 +87,13 @@ void drawTrack() {
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
 //STEP_DELAY
 int checkStep() {
+	int data[3];
+	getAccelerationData(data);
+	for (int i = 0; i < 3; i++){
+		if (data[i] > STEP_SENSITIVITY){ //If the acceleration recorded is greater than the threshhold
+			return 1;
+		}
+	}
 	return 0;
 }
 
@@ -127,6 +143,34 @@ void resetSteps() {
 //Set steps
 void setSteps(int s) {
 	steps = s;
+}
+
+//Inputs the acceleration data into the given int[] in the form of
+//[0] - X acceleration
+//[1] - Y
+//[2] - Z
+void getAccelerationData(int[] data){
+	//Probably can be done in a loop, but this is probably more readable
+	char rgchReadAcclX[3] = {0};
+	char rgchReadAcclX[3] = {0};
+	char rgchReadAcclX[3] = {0};
+
+	rgchReadAcclX[0] = X_ADDR;
+	rgchReadAcclY[0] = Y_ADDR;
+	rgchReadAcclZ[0] = Z_ADDR;
+
+	I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
+	I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
+	I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
+
+	data[0] = (rgchReadAcclX[2] << 8) | rgchReadAccX[1];
+	data[1] = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
+	data[2] = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
+}
+
+//TODO: Put the in the setup code
+void initAccelerometer(){
+	GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
 }
 
 #endif // TRACK_H
