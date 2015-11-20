@@ -76,9 +76,6 @@ struct date getDate() {
   return currentDate;
 }
 
-//Get time elapsed in date format
-struct date getTimeElapsed(struct date a, struct date b) {
-  struct date d;
   d.ms = abs(b.ms - a.ms);
   d.second = abs(b.second - a.second); 
   d.minute = abs(b.minute - a.minute);
@@ -91,16 +88,12 @@ struct date getTimeElapsed(struct date a, struct date b) {
 
 //Returns time elapsed in ms
 int timeElapsedMs(struct date a, struct date b) {
-  struct date d = getTimeElapsed(a, b);
-  
-  return d.ms + d.second * 1000 + d.minute * 60 * 1000 + d.hour * 60 * 60 * 1000 + d.day * 24 * 60 * 60 * 1000 + d.month * month[d.month-1] * 24 * 60 * 60 * 1000 + d.year * (month[d.month-1] == 29 ? 366 : 365) * 24 * 60 * 60 * 1000;
+    return (b.ms - a.ms) + (b.second - a.second) * 1000 + (b.minute - a.minute) * 60 * 1000 + (b.hour - a.hour) * 60 * 60 * 1000 + (b.day - a.day) * 24 * 60 * 60 * 1000 + (b.month - a.month) * month[b.month - a.month - 1] * 24 * 60 * 60 * 1000 + (b.year - a.year) * (month[b.month - a.month - 1] == 29 ? 366 : 365) * 24 * 60 * 60 * 1000;
 }
 
 //Returns time elapsed in s
 int timeElapsedS(struct date a, struct date b) {
-  struct date d = getTimeElapsed(a, b);
-  
-  return d.ms / 1000 + d.second + d.minute * 60 + d.hour * 60 * 60 + d.day * 24 * 60 * 60 + d.month * month[d.month-1] * 24 * 60 * 60 + d.year * (month[d.month-1] == 29 ? 366 : 365) * 24 * 60 * 60;
+    return timeElapsedMs(a, b) / 1000;
 }
 
 //Returns time s seconds in the future
@@ -108,9 +101,14 @@ struct date futureTime(struct date a, int s) {
   a.second += s;
   a.minute += a.second / 60;
   a.second = a.second % 60;
-
-  //TODO rest going to bed today
-  //TODO Do tomorrow
+  a.hour += a.minute / 60;
+  a.minute = a.minute % 60;
+  a.day + a.hour / 24;
+  a.hour = a.hour % 24;
+  a.month += a.day / month[a.month - 1];
+  a.day = a.day % month[a.month - 1];
+  a.year += a.month / 12;
+  a.month = a.month % 12;
   return a;
 }
 

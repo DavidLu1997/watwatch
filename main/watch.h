@@ -12,6 +12,7 @@
 //Function calling delays, ms
 #define DRAW_DELAY 50
 #define TIME_DELAY 10
+#define TIMER_DELAY 1
 
 //Current date
 struct date current;
@@ -60,12 +61,24 @@ void updateTime() {
 	current = getDate();
 }
 
+//Update Timer, continuously called
+//TIMER_DELAY
+void updateTimer() {
+	return;
+}
+
 void getwatch() {
   return;
 }
 
 void timer() {
   return;
+}
+
+//Check alarm, continuously called
+//TIME_DELAY
+void checkAlarm() {
+	return;
 }
 
 void setAlarm() {
