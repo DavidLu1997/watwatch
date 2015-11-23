@@ -1,6 +1,6 @@
 
   extern "C" {
-  #include "track.h"
+  //#include "track.h"
   #include <delay.h>
   #include <FillPat.h>
   #include <I2CEEPROM.h>
@@ -16,33 +16,32 @@
   long 	lBtn2;
   long lBtn1;
   
-  
   void setup()
   {
     
     // put your setup code here, to run once:
-    
     OrbitOledInit();
     OrbitOledClear();
   }
   
   void loop()
   {
-    
-    if (checkStep()) steps++;
-    Serial.println("STEPS: " + steps);
-    //OrbitOledSetCursor(0, 0);
-    //OrbitOledPutString(steps);
-    //OritOledUpdate();
-    //delay(50);
-    
-    //Bottom button
+     //Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     lBtn1 = GPIOPinRead(BTN1Port, BTN1);
     
     //Top Button
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     lBtn2 = GPIOPinRead(BTN2Port, BTN2);
+    
+    
+   // if (checkStep()) steps++;
+   // Serial.println("STEPS: " + steps);
+    
+    //OrbitOledSetCursor(0, 0);
+    //OrbitOledPutString(steps);
+    //OritOledUpdate();
+    //delay(50);
     
     //Display menu option based on current value of i, which is adjusted when button is clicked
     if (i == 0) {
@@ -66,13 +65,40 @@
          OrbitOledUpdate();
     }
     else if (i==4) {
-       OrbitOledSetCursor(6, 1);
-       OrbitOledPutString("TEMP");
+       OrbitOledSetCursor(2, 1);
+       OrbitOledPutString("TEMPERATURE");
        OrbitOledUpdate();
     }
     
+    //Making a selection
+    if (lBtn1 == BTN1) {
+      //TIME
+      if (i == 0) {
+          Serial.print("test");
+      }
+      //STOPWATCH
+      else if (i == 1) {
+        Serial.print("test");
+      }
+      //ALARM
+      else if (i == 2) {
+        Serial.print("test");
+      }
+      //STEPS
+      else if (i == 3) {
+        Serial.print("test");
+      }
+      //TEMP
+      else if (i == 4) {
+        Serial.print("test");
+      }
+      //Should not exceed list of options
+      else
+        Serial.print("SUM TING VERY WONG"); 
+    }
     
-    if(lBtn2 == BTN2) {
+    //Cycle through menu options
+    if (lBtn2 == BTN2) {
       //Increase i when button is clicked
       if (i < 4) {
          i++;
@@ -85,6 +111,10 @@
         OrbitOledClear();
         delay(200);
       }
+      //Should not exceed list of options
+      else
+        Serial.print("SUM TING VERY WONG");
     }
+    
   }
 
