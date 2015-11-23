@@ -90,6 +90,36 @@ void trackInput(int input, int selected) {
 	}
 }
 
+//Inputs the acceleration data into the given int[] in the form of
+//[0] - X acceleration
+//[1] - Y
+//[2] - Z
+//ACCEL_DELAY
+void getAccelerationData(){
+	//Probably can be done in a loop, but this is probably more readable
+
+	int d[3];
+
+	char rgchReadAcclX[3] = {0};
+	char rgchReadAcclY[3] = {0};
+	char rgchReadAcclZ[3] = {0};
+
+	rgchReadAcclX[0] = X_ADDR;
+	rgchReadAcclY[0] = Y_ADDR;
+	rgchReadAcclZ[0] = Z_ADDR;
+
+	I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
+	I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
+	I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
+
+	d[0] = (rgchReadAcclX[2] << 8) | rgchReadAccX[1];
+	d[1] = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
+	d[2] = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
+
+	//Store magnitude of acceleration in data
+	data[millis() % STEP_RANGE] = sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+}
+
 //Draws current function, continuously called
 //DRAW_DELAY
 void drawTrack() {
@@ -119,7 +149,7 @@ int checkStep() {
 //Check temperature, continuously called, returns 1 if heartbeat occurred in past TEMP_RANGE ms
 //TEMP_DELAY
 int checkHeart() {
-	heartBeats[millis() / 1000 % HEART_RANGe]++;
+	heartBeats[millis() / 1000 % HEART_RANGE]++;
 	return 0;
 }
 
@@ -155,36 +185,6 @@ void resetSteps() {
 //Set steps
 void setSteps(int s) {
 	steps = s;
-}
-
-//Inputs the acceleration data into the given int[] in the form of
-//[0] - X acceleration
-//[1] - Y
-//[2] - Z
-//ACCEL_DELAY
-void getAccelerationData(){
-	//Probably can be done in a loop, but this is probably more readable
-
-	int d[3];
-
-	char rgchReadAcclX[3] = {0};
-	char rgchReadAcclX[3] = {0};
-	char rgchReadAcclX[3] = {0};
-
-	rgchReadAcclX[0] = X_ADDR;
-	rgchReadAcclY[0] = Y_ADDR;
-	rgchReadAcclZ[0] = Z_ADDR;
-
-	I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
-	I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
-	I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
-
-	d[0] = (rgchReadAcclX[2] << 8) | rgchReadAccX[1];
-	d[1] = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
-	d[2] = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
-
-	//Store magnitude of acceleration in data
-	data[millis() % STEP_RANGE] = sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
 }
 
 //TODO: Put the in the setup code

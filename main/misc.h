@@ -62,15 +62,6 @@ void miscInput(int input, int selected) {
 	}
 }
 
-//Hard coded begin date
-struct date startDate = {2015, 10, 29, 18, 9, 45, 0};
-
-//Current date
-struct date currentDate = startDate;
-
-//Hard coded day of month
-int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || startDate.year % 400 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30 ,31, 30, 31};
-
 //Get current date based on program runtime
 struct date getDate() {
   currentDate.ms += millis();
@@ -90,6 +81,9 @@ struct date getDate() {
   return currentDate;
 }
 
+//Returns absolute value difference between 2 dates
+struct date difference(struct date a, struct date b){
+  struct date d;
   d.ms = abs(b.ms - a.ms);
   d.second = abs(b.second - a.second); 
   d.minute = abs(b.minute - a.minute);
