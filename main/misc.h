@@ -10,6 +10,12 @@
 #include "Energia.h"
 #include "socket.h"
 
+//Initialization function
+//Only called once
+void initMisc() {
+  return;
+}
+
 //Receives input
 void miscInput(iint input, int selected) {
 	switch(input) {
