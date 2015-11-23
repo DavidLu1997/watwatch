@@ -43,6 +43,10 @@ int selected = 0;
 #define HEART 6
 #define FITNESS 7
 
+void trackInput(int input, int selected);
+void watchInput(int input, int selected);
+void miscInput(int input, int selected);
+
 //Processes input given in the form of an action (int), and its size
 void process(int input) {
 	switch(currentProcess) {

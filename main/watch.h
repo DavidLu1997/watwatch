@@ -87,7 +87,7 @@ void timer() {
 void checkAlarm() {
 	int i;
 	for(i = 0; i < alarmSize; i++) {
-		if(timeElapsedMs(alarms[i], getDate) >= 0) {
+		if(timeElapsedMs(alarms[i], getDate()) >= 0) {
 			//RING RING RING RING RING BANANA PHONE
 		}
 	}
