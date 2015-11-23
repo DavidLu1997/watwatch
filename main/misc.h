@@ -1,6 +1,5 @@
 //Misc.h
 //Used for miscellaneous functions
-//Please edit with an actual text editor
 
 #ifndef MISC_H
 #define MISC_H
@@ -10,10 +9,29 @@
 #include "Energia.h"
 #include "socket.h"
 
+struct date {
+  int year;
+  int month;
+  int day;
+  int hour;
+  int minute;
+  int second;
+  int ms;
+};
+
+//Hard coded begin date
+struct date startDate = {2015, 11, 26, 11, 30, 0, 0};
+
+//Current date
+struct date currentDate = startDate;
+
+//Hard coded day of month
+int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || startDate.year % 400 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30 ,31, 30, 31};
+
 //Initialization function
 //Only called once
 void initMisc() {
-  return;
+	return;
 }
 
 //Receives input
@@ -43,16 +61,6 @@ void miscInput(iint input, int selected) {
 			break;
 	}
 }
-
-struct date {
-  int year;
-  int month;
-  int day;
-  int hour;
-  int minute;
-  int second;
-  int ms;
-};
 
 //Hard coded begin date
 struct date startDate = {2015, 10, 29, 18, 9, 45, 0};

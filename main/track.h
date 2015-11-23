@@ -1,6 +1,5 @@
 //Track.h
 //Used for tracking-related functions
-//Please edit with an actual text editor
 
 #ifndef TRACK_H
 #define TRACK_H
@@ -25,20 +24,20 @@
 #define HEART_RANGE 60000 //1 minute
 
 //Acceleration data memory locations
-#define	X_ADDR = 0x32;
-#define	Y_ADDR = 0x34;
-#define	Z_ADDR = 0x36;
+#define	X_ADDR 0x32
+#define	Y_ADDR 0x34
+#define	Z_ADDR 0x36
 
 //Step Tracking Params
-#define STEP_SENSITIVITY = 1.0; //Higher the number = less sensitive
+#define STEP_SENSITIVITY 1.0 //Higher the number = less sensitive
+#define STEP_DISTANCE 0.7874 //Distance travelled per step in m
+#define WEIGHT 70 //Weight of user in kg
 
 //Number of steps since start
 int steps = 0;
 
 //Number of heartbeats since start
 int beats = 0;
-
-//TODO: Initialize all arrays and shit
 
 //Heartbeat per second
 int heartBeats[HEART_RANGE / 1000];
@@ -52,6 +51,13 @@ double temp[TEMP_RANGE];
 //Initialization function
 //Only called once
 void initTrack() {
+	int i;
+	for(i = 0 ; i < HEART_RANGE / 1000; i++)
+		heartBeats[i] = 0;
+	for(i = 0; i < STEP_RANGE; i++)
+		data[i] = 0;
+	for(i = 0; i < TEMP_RANGE; i++)
+		temp[i] = 0;
 	return;
 }
 
@@ -87,7 +93,7 @@ void trackInput(int input, int selected) {
 //Draws current function, continuously called
 //DRAW_DELAY
 void drawTrack() {
-
+	return;
 }
 
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
@@ -106,7 +112,7 @@ int checkStep() {
 	if(avg >= STEP_SENSITIVITY) {
 		return 1;
 	}
-	
+
 	return 0;
 }
 
@@ -127,7 +133,7 @@ void getData() {
 //Get temperature data, continuously called
 //TEMP_DELAY
 void getTemperature() {
-	//TODO: Get accelerometer reading
+	//TODO: Get thermometer reading
 	data[millis() % TEMP_RANGE] = 0.0;
 }
 
@@ -137,15 +143,15 @@ int getSteps() {
 }
 
 //Get current distance travelled in m
-int getDistance() {
-	//TODO: Formula
-	return 0;
+double getDistance() {
+	return steps * STEP_DISTANCE;
 }
 
 //Get calories burnt
 int getCalories() {
-	//TODO: Formula
-	return 0;
+	double kmh = (getDistance() / 1000.0) / (millis() / 1000.0) * 3600;
+	//Formula obtained from ShapeSense.com
+	return (0.0215 * pow(kmh, 3) - 0.1765 * pow(kmh, 2) + 0.8710 * kmh + 1.8600) * WEIGHT * (millis() / 1000 * 3600);
 }
 
 //Reset steps
