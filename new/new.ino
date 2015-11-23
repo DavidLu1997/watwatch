@@ -1,4 +1,6 @@
+
   extern "C" {
+  #include "track.h"
   #include <delay.h>
   #include <FillPat.h>
   #include <I2CEEPROM.h>
@@ -12,6 +14,7 @@
   //Variables
   int i = 0;
   long 	lBtn2;
+  long lBtn1;
   
   
   void setup()
@@ -25,8 +28,17 @@
   
   void loop()
   {
+    
+    if (checkStep()) steps++;
+    Serial.println("STEPS: " + steps);
+    //OrbitOledSetCursor(0, 0);
+    //OrbitOledPutString(steps);
+    //OritOledUpdate();
+    //delay(50);
+    
     //Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+    lBtn1 = GPIOPinRead(BTN1Port, BTN1);
     
     //Top Button
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
@@ -75,3 +87,4 @@
       }
     }
   }
+

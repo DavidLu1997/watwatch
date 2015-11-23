@@ -22,9 +22,6 @@ void loop()
 {
 	//Serial.println(millis());
 	getAccelerationData();
-	for(int i = 0; i < STEP_RANGE; i++){
-		Serial.println(data[i]);
-	}
-	Serial.println("--------------------ITERATION------------------");
+	Serial.println(data[millis() % STEP_RANGE]);
 	sleep(50);
 }
