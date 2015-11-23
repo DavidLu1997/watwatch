@@ -123,13 +123,6 @@ int checkHeart() {
 	return 0;
 }
 
-//Get accelerometer data, continuously called
-//ACCEL_DELAY
-void getData() {
-	//TODO: Get accelerometer reading
-	data[millis() % STEP_RANGE] = 0.0;
-}
-
 //Get temperature data, continuously called
 //TEMP_DELAY
 void getTemperature() {
