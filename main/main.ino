@@ -7,10 +7,11 @@ extern "C" {
 #include <OrbitOled.h>
 #include <OrbitOledChar.h>
 #include <OrbitOledGrph.h>
+}
+
 #include "watch.h"
 #include "track.h"
 #include "misc.h"
-}
 
 void setup()
 {
@@ -25,3 +26,4 @@ void loop()
 	Serial.println(data[millis() % STEP_RANGE]);
 	sleep(50);
 }
+

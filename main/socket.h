@@ -5,6 +5,7 @@
 #include "watch.h"
 #include "misc.h"
 
+
 //Input delay = 50 ms
 #define DELAY 50
 
@@ -93,3 +94,4 @@ void highlightItem(int n){
 
 
 #endif //SOCKET_H
+

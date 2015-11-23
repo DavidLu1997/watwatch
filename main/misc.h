@@ -121,3 +121,4 @@ struct date futureTime(struct date a, int s) {
 }
 
 #endif // MISC_H
+
