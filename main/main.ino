@@ -20,6 +20,11 @@ void setup()
 
 void loop()
 {
-	Serial.println(millis());
+	//Serial.println(millis());
+	getAccelerationData();
+	for(int i = 0; i < STEP_RANGE; i++){
+		Serial.println(data[i]);
+	}
+	Serial.println("--------------------ITERATION------------------");
 	sleep(50);
 }
