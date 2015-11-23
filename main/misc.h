@@ -35,7 +35,7 @@ void initMisc() {
 }
 
 //Receives input
-void miscInput(iint input, int selected) {
+void miscInput(int input, int selected) {
 	switch(input) {
 		case SWITCH_A:
 			//TODO: Switch A
