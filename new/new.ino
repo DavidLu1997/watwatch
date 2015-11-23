@@ -14,13 +14,16 @@ void setup()
 {
   
   // put your setup code here, to run once:
+  GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+  GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+  lBtn1 = GPIOPinRead(BTN1Port, BTN1);
   OrbitOledInit();
   OrbitOledClear();
 }
 
 void loop()
 {
-  
+  long 	lBtn1;
   //Display, pause, then loop through menu options
   
   delay(1000);
@@ -30,6 +33,10 @@ void loop()
   OrbitOledUpdate();
   delay(1000);
   OrbitOledClear();
+  
+  if(lBtn1 == BTN1) {
+    OrbitOledClear();
+  }
   
   delay(1000);
   OrbitOledSetCursor(4, 1);
