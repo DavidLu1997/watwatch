@@ -13,8 +13,6 @@ extern "C" {
 void setup()
 {
   
-  char *menuArray;
-  
   // put your setup code here, to run once:
   OrbitOledInit();
   OrbitOledClear();
@@ -23,10 +21,32 @@ void setup()
 void loop()
 {
   // put your main code here, to run repeatedly:
-  OrbitOledSetCursor(0, 0);
-  OrbitOledPutString("SUM TING PUSH");
-  OrbitOledSetCursor(0, 2);
-  OrbitOledPutString("RILEY WONG");
+  OrbitOledSetCursor(4, 2);
+  OrbitOledPutString("TIME");
   OrbitOledUpdate();
+  OrbitOledClear();
   
+  delay(1000);
+  OrbitOledSetCursor(4, 2);
+  OrbitOledPutString("STOPWATCH");
+  OrbitOledUpdate();
+  OrbitOledClear();
+  
+  delay(1000);
+  OrbitOledSetCursor(4, 2);
+  OrbitOledPutString("ALARM");
+  OrbitOledUpdate();
+  OrbitOledClear();
+  
+  delay(1000);
+  OrbitOledSetCursor(4, 2);
+  OrbitOledPutString("STEPS");
+  OrbitOledUpdate();
+  OrbitOledClear();
+  
+  delay(1000);
+  OrbitOledSetCursor(4, 2);
+  OrbitOledPutString("TEMP");
+  OrbitOledUpdate();
+  OrbitOledClear();
 }
