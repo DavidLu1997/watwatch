@@ -21,6 +21,12 @@ struct date current;
 struct date alarms[100];
 int alarmSize = 0;
 
+//Initialization function
+//Only called once
+void initWatch() {
+	return;
+}
+
 //Receives input in the form of a button/switch/something pressed, and the selected item
 void watchInput(int input, int selected) {
 	switch(input) {
