@@ -4,6 +4,17 @@
 #ifndef TRACK_H
 #define TRACK_H
 
+extern "C" {
+#include <delay.h>
+#include <FillPat.h>
+#include <I2CEEPROM.h>
+#include <LaunchPad.h>
+#include <OrbitBoosterPackDefs.h>
+#include <OrbitOled.h>
+#include <OrbitOledChar.h>
+#include <OrbitOledGrph.h>
+}
+
 #include "watch.h"
 #include "misc.h"
 #include "socket.h"
@@ -90,6 +101,9 @@ void trackInput(int input, int selected) {
 	}
 }
 
+char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
+bool I2CGenIsNotIdle();
+
 //Inputs the acceleration data into the given int[] in the form of
 //[0] - X acceleration
 //[1] - Y
@@ -112,7 +126,7 @@ void getAccelerationData(){
 	I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
 	I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
 
-	d[0] = (rgchReadAcclX[2] << 8) | rgchReadAccX[1];
+	d[0] = (rgchReadAcclX[2] << 8) | rgchReadAcclX[1];
 	d[1] = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
 	d[2] = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
 
@@ -192,4 +206,133 @@ void initAccelerometer(){
 	GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
 }
 
+char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr) {
+
+  int 		i;
+  char * 		pbTemp;
+
+  pbTemp = pbData;
+
+  /*Start*/
+
+  /*Send Address High Byte*/
+  /* Send Write Block Cmd*/
+  I2CMasterSlaveAddrSet(I2C0_BASE, bAddr, WRITE);
+  I2CMasterDataPut(I2C0_BASE, *pbTemp);
+
+  I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+
+  DelayMs(1);
+
+  /* Idle wait*/
+  while(I2CGenIsNotIdle());
+
+  /* Increment data pointer*/
+  pbTemp++;
+
+  /*Execute Read or Write*/
+
+  if(fRW == READ) {
+
+    /* Resend Start condition
+	** Then send new control byte
+	** then begin reading
+	*/
+    I2CMasterSlaveAddrSet(I2C0_BASE, bAddr, READ);
+
+    while(I2CMasterBusy(I2C0_BASE));
+
+    /* Begin Reading*/
+    for(i = 0; i < cSize; i++) {
+
+      if(cSize == i + 1 && cSize == 1) {
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+
+        DelayMs(1);
+
+        while(I2CMasterBusy(I2C0_BASE));
+      }
+      else if(cSize == i + 1 && cSize > 1) {
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
+
+        DelayMs(1);
+
+        while(I2CMasterBusy(I2C0_BASE));
+      }
+      else if(i == 0) {
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_RECEIVE_START);
+
+        DelayMs(1);
+
+        while(I2CMasterBusy(I2C0_BASE));
+
+        /* Idle wait*/
+        while(I2CGenIsNotIdle());
+      }
+      else {
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
+
+        DelayMs(1);
+
+        while(I2CMasterBusy(I2C0_BASE));
+
+        /* Idle wait */
+        while(I2CGenIsNotIdle());
+      }
+
+      while(I2CMasterBusy(I2C0_BASE));
+
+      /* Read Data */
+      *pbTemp = (char)I2CMasterDataGet(I2C0_BASE);
+
+      pbTemp++;
+
+    }
+
+  }
+  else if(fRW == WRITE) {
+
+    /*Loop data bytes */
+    for(i = 0; i < cSize; i++) {
+      /* Send Data */
+      I2CMasterDataPut(I2C0_BASE, *pbTemp);
+
+      while(I2CMasterBusy(I2C0_BASE));
+
+      if(i == cSize - 1) {
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+
+        DelayMs(1);
+
+        while(I2CMasterBusy(I2C0_BASE));
+      }
+      else {
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+
+        DelayMs(1);
+
+        while(I2CMasterBusy(I2C0_BASE));
+
+        /* Idle wait */
+        while(I2CGenIsNotIdle());
+      }
+
+      pbTemp++;
+    }
+
+  }
+
+  /*Stop*/
+
+  return 0x00;
+
+}
+
+bool I2CGenIsNotIdle() {
+
+  return !I2CMasterBusBusy(I2C0_BASE);
+
+}
+
 #endif // TRACK_H
+
