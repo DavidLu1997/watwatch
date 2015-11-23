@@ -1,6 +1,5 @@
 //Watch.h
 //Used for time-related functions
-//Please edit with an actual text editor
 
 #ifndef WATCH_H
 #define WATCH_H
@@ -18,12 +17,14 @@
 struct date current;
 
 //Alarms
-struct date alarms[100];
+#define MAX_ALARMS 100
+struct date alarms[MAX_ALARMS];
 int alarmSize = 0;
 
 //Initialization function
 //Only called once
 void initWatch() {
+	current = getDate();
 	return;
 }
 
@@ -84,11 +85,30 @@ void timer() {
 //Check alarm, continuously called
 //TIME_DELAY
 void checkAlarm() {
+	int i;
+	for(i = 0; i < alarmSize; i++) {
+		if(timeElapsedMs(alarms[i], getDate) >= 0) {
+			//RING RING RING RING RING BANANA PHONE
+		}
+	}
 	return;
 }
 
-void setAlarm() {
-  return;
+void setAlarm(struct date d) {
+	if(alarmSize + 1 < MAX_ALARMS) {
+		alarms[alarmSize + 1] = d;
+		alarmSize++;
+	}
+	else {
+		//SUM TING WONG
+		//REALLY WONG
+		//REALLY REALLY WONG
+		//REALLY REALLY REALLY WONG
+		//RILEY WONG
+
+		//How do you make more than MAX_ALARMS alarms???
+	}
+	return;
 }
 
 #endif // WATCH_H
