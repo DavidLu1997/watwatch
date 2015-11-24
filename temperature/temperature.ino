@@ -42,7 +42,7 @@ void loop()
     fClearOled = false;
 
     OrbitOledSetCursor(0, 0);
-    OrbitOledPutString("Temp: ");
+    OrbitOledPutString("ShitTemp: ");
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
     SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
@@ -85,13 +85,13 @@ void loop()
   }
   szTemp[5] = '\0';
 
-  OrbitOledSetCursor(6,0);
+  OrbitOledSetCursor(10,0);
 
   OrbitOledPutString(szTemp);
 
-  OrbitOledSetCursor(11, 0);
+  OrbitOledSetCursor(15, 0);
 
-  OrbitOledPutString(" C");
+  OrbitOledPutString("C");
 }
 
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr) {
