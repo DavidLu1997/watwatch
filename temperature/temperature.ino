@@ -25,57 +25,35 @@ void setup()
 
 void loop()
 {
-  char 	szTempLabel[] = {
-    'T', 'e', 'm', 'p', ':', ' ', '\0'            };
-  char	szC[] = {
-    ' ', 'C', '\0'            };
   char 	rgchReadTemp[] = {
     0, 0, 0            };
   char 	rgchWriteTemp[] = {
     1, 0x20            };
-  short  	tempReg;
+  short tempReg;
   short	tempWhole;
   short	tempDec;
   int		i;
   char 	szTemp[6];
 
-  /*
-   * If applicable, reset OLED
-   */
   if(fClearOled == true) {
     OrbitOledClear();
     OrbitOledMoveTo(0,0);
     OrbitOledSetCursor(0,0);
     fClearOled = false;
 
-    /*
-     * Setup Oled for Temperature
-     */
     OrbitOledSetCursor(0, 0);
-    OrbitOledPutString(szTempLabel);
+    OrbitOledPutString("Temp: ");
 
-    /*
-     * Enable I2C Peripheral
-     */
     SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
     SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
 
-    /*
-     * Set I2C GPIO pins
-     */
     GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
     GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
     GPIOPinConfigure(I2CSCL);
     GPIOPinConfigure(I2CSDA);
 
-    /*
-     * Setup I2C
-     */
     I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
 
-    /*
-     * Setup Temperature Sensor
-     */
     I2CGenTransmit(rgchWriteTemp, 1, WRITE, TEMPADDR);
   }
 
@@ -113,7 +91,7 @@ void loop()
 
   OrbitOledSetCursor(11, 0);
 
-  OrbitOledPutString(szC);
+  OrbitOledPutString(" C");
 }
 
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr) {
