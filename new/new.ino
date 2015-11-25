@@ -42,18 +42,10 @@
     
     milliseconds = millis();
     seconds = milliseconds/1000;
-   
-    if (seconds >= 60) {
-      minutes+=seconds / 60;
-      seconds = seconds % 60;
-      if (minutes == 60) {
-         minutes = 0;
-         hours++;
-      }
-      seconds = 0;
-      delay(200);
-    }
-    
+    minutes = seconds/60;
+    seconds = seconds % 60;
+    hours = minutes/60;
+    minutes = minutes % 60;
     
     
     
@@ -183,6 +175,13 @@
         Serial.print("SUM TING VERY WONG");
       digitalWrite(GREEN_LED, LOW);
     }
+    
+    delay();
+    OrbitOledClear();
+    
+    /* /Leave for Stopwatch effect
+    OrbitOledClear();
+    delay(1);*/
     
   }
 
