@@ -44,6 +44,10 @@ extern "C" {
 #define STEP_DISTANCE 0.7874 //Distance travelled per step in m
 #define WEIGHT 70 //Weight of user in kg
 
+//Heart Rate Params
+#define BEAT_SENSITIVITY 0.25
+#define BEAT_FACTOR 10
+
 //Number of steps since start
 int steps = 0;
 
@@ -58,6 +62,8 @@ double data[STEP_RANGE];
 
 //Temperature data for past TEMP_RANGE
 double temp[TEMP_RANGE];
+
+bool	fClearOled;
 
 //Initialization function
 //Only called once
@@ -160,18 +166,82 @@ int checkStep() {
 	return 0;
 }
 
-//Check temperature, continuously called, returns 1 if heartbeat occurred in past TEMP_RANGE ms
+//Check temperature, continuously called, increments heartBeats if heartbeat occurred in past TEMP_RANGE ms
 //TEMP_DELAY
-int checkHeart() {
+void checkHeart() {
+  double avg = 0;
+  int i = 0;
+  for(i = 0; i < TEMP_RANGE; i++) {
+     avg += temp[i];
+  }
+  avg /= TEMP_RANGE;
+  double avgDiff = 0;
+  for(i = 0; i < TEMP_RANGE; i++) {
+     avgDiff += fabs(temp[i]-avg); 
+  }
+  avgDiff /= (TEMP_RANGE / BEAT_FACTOR);
+  
+  if(avgDiff >= BEAT_SENSITIVITY) {
 	heartBeats[millis() / 1000 % HEART_RANGE]++;
-	return 0;
+  }
 }
 
 //Get temperature data, continuously called
 //TEMP_DELAY
 void getTemperature() {
-	//TODO: Get thermometer reading
-	data[millis() % TEMP_RANGE] = 0.0;
+	char 	rgchReadTemp[] = {
+    0, 0, 0            };
+  char 	rgchWriteTemp[] = {
+    1, 0x20            };
+  short tempReg;
+  short	tempWhole;
+  short	tempDec;
+  int		i;
+  char 	szTemp[6];
+
+  if(fClearOled == true) {
+    OrbitOledClear();
+    OrbitOledMoveTo(0,0);
+    OrbitOledSetCursor(0,0);
+    fClearOled = false;
+
+    OrbitOledSetCursor(0, 0);
+    OrbitOledPutString("ShitTemp: ");
+
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
+
+    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+    GPIOPinConfigure(I2CSCL);
+    GPIOPinConfigure(I2CSDA);
+
+    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+
+    I2CGenTransmit(rgchWriteTemp, 1, WRITE, TEMPADDR);
+  }
+
+  rgchReadTemp[0] = 0;
+  I2CGenTransmit(rgchReadTemp, 2, READ, TEMPADDR);
+
+  tempReg = (rgchReadTemp[1] << 8) | rgchReadTemp[2];
+
+  tempWhole = 0;
+  tempDec = 0;
+
+  for(i = 0; i < 7; i++) {
+    if(tempReg & (1 << (8 + i))) {
+      tempWhole += pow(2,i);
+    }
+  }
+
+  if(tempReg & (1 << 7) ) {
+    tempDec += 50;
+  }
+  if(tempReg & (1 << 6) ) {
+    tempDec += 25;
+  }
+	temp[millis() % TEMP_RANGE] = tempWhole + tempDec / 100.0;
 }
 
 //Get current steps
