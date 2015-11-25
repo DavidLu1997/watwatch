@@ -9,12 +9,20 @@
   #include <OrbitOled.h>
   #include <OrbitOledChar.h>
   #include <OrbitOledGrph.h>
+  #include <stdlib.h>
   }
   
   //Variables
   int i = 0;
   long 	lBtn2;
   long lBtn1;
+  long hours = 19;
+  long minutes = 0;
+  long seconds = 0;
+  long milliseconds;
+  char stringSeconds[2];
+  char stringMinutes[2];
+  char stringHours[2];
   
   int pot = 0;
   
@@ -31,7 +39,45 @@
   
   void loop()
   {
-    Serial.println("Start");
+    
+    milliseconds = millis();
+    seconds = milliseconds/1000;
+   
+    if (seconds >= 60) {
+      minutes+=seconds / 60;
+      seconds = seconds % 60;
+      if (minutes == 60) {
+         minutes = 0;
+         hours++;
+      }
+      seconds = 0;
+      delay(200);
+    }
+    
+    
+    
+    
+    itoa(hours, stringHours, 10); 
+    OrbitOledSetCursor(3, 2);
+    OrbitOledPutString(stringHours);
+    
+    OrbitOledSetCursor(5, 2);
+    OrbitOledPutString(":");
+    
+    itoa(minutes, stringMinutes, 10);
+    OrbitOledSetCursor(7, 2);
+    OrbitOledPutString(stringMinutes);
+    OrbitOledUpdate;
+    
+    OrbitOledSetCursor(9, 2);
+    OrbitOledPutString(":");
+    
+    itoa(seconds, stringSeconds, 10);
+    OrbitOledSetCursor(11, 2);
+    OrbitOledPutString(stringSeconds);
+    OrbitOledUpdate;
+
+
      //Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     lBtn1 = GPIOPinRead(BTN1Port, BTN1);
@@ -44,6 +90,8 @@
     pot = analogRead(A0);
     pot = pot / 4;
     analogWrite(BLUE_LED, pot);
+    
+    //OrbitOledPutString(50);
     
    // if (checkStep()) steps++;
    // Serial.println("STEPS: " + steps);
