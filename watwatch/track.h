@@ -63,7 +63,10 @@ double data[STEP_RANGE];
 //Temperature data for past TEMP_RANGE
 double temp[TEMP_RANGE];
 
+//Required variables
 bool	fClearOled;
+char  chSwtCur;
+char  chSwtPrev;
 
 //Initialization function
 //Only called once
@@ -109,6 +112,7 @@ void trackInput(int input, int selected) {
 
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
 bool I2CGenIsNotIdle();
+void DeviceInit();
 
 //Inputs the acceleration data into the given int[] in the form of
 //[0] - X acceleration
@@ -116,28 +120,87 @@ bool I2CGenIsNotIdle();
 //[2] - Z
 //ACCEL_DELAY
 void getAccelerationData(){
-	//Probably can be done in a loop, but this is probably more readable
+	short  dataX, dataY, dataZ;
 
-	int d[3];
+  char  chPwrCtlReg = 0x2D;
+  char  chX0Addr = 0x32;
+  char  chY0Addr = 0x34;
+  char  chZ0Addr = 0x36;
 
-	char rgchReadAcclX[3] = {0};
-	char rgchReadAcclY[3] = {0};
-	char rgchReadAcclZ[3] = {0};
+  char  rgchReadAcclX[] = {
+    0, 0, 0            };
+  char  rgchWriteAcclX[] = {
+    0, 0            };
+  char  rgchReadAcclY[] = {
+    0, 0, 0            };
+  char  rgchWriteAcclY[] = {
+    0, 0            };
+  char  rgchReadAcclZ[] = {
+    0, 0, 0            };
+  char  rgchWriteAcclZ[] = {
+    0, 0            };
 
-	rgchReadAcclX[0] = X_ADDR;
-	rgchReadAcclY[0] = Y_ADDR;
-	rgchReadAcclZ[0] = Z_ADDR;
+  if(fClearOled == true) {
+    OrbitOledClear();
+    OrbitOledMoveTo(0,0);
+    OrbitOledSetCursor(0,0);
+    fClearOled = false;
 
-	I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
-	I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
-	I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
+    /*
+     * Enable I2C Peripheral
+     */
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
 
-	d[0] = (rgchReadAcclX[2] << 8) | rgchReadAcclX[1];
-	d[1] = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
-	d[2] = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
+    /*
+     * Set I2C GPIO pins
+     */
+    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+    GPIOPinConfigure(I2CSCL);
+    GPIOPinConfigure(I2CSDA);
+
+    /*
+     * Setup I2C
+     */
+    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+
+    /* Initialize the Accelerometer
+     *
+     */
+    GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
+
+    rgchWriteAcclX[0] = chPwrCtlReg;
+    rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
+
+    rgchWriteAcclY[0] = chPwrCtlReg;
+    rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
+
+    rgchWriteAcclZ[0] = chPwrCtlReg;
+    rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
+
+  }
+
+  rgchReadAcclX[0] = chX0Addr;
+    I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
+
+    dataX = (rgchReadAcclX[2] << 8) | rgchReadAcclX[1];
+
+  rgchReadAcclY[0] = chY0Addr;
+    I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
+
+    dataX = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
+
+  rgchReadAcclZ[0] = chZ0Addr;
+    I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
+
+    dataX = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
 
 	//Store magnitude of acceleration in data
-	data[millis() % STEP_RANGE] = sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+	data[millis() % STEP_RANGE] = sqrt(dataX * dataX + dataY * dataY + dataZ * dataZ);
 }
 
 //Draws current function, continuously called
@@ -403,6 +466,97 @@ bool I2CGenIsNotIdle() {
   return !I2CMasterBusBusy(I2C0_BASE);
 
 }
+
+void DeviceInit()
+{
+  /*
+   * First, Set Up the Clock.
+   * Main OSC     -> SYSCTL_OSC_MAIN
+   * Runs off 16MHz clock -> SYSCTL_XTAL_16MHZ
+   * Use PLL      -> SYSCTL_USE_PLL
+   * Divide by 4    -> SYSCTL_SYSDIV_4
+   */
+  SysCtlClockSet(SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ | SYSCTL_USE_PLL | SYSCTL_SYSDIV_4);
+
+  /*
+   * Enable and Power On All GPIO Ports
+   */
+  //SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOA | SYSCTL_PERIPH_GPIOB | SYSCTL_PERIPH_GPIOC |
+  //            SYSCTL_PERIPH_GPIOD | SYSCTL_PERIPH_GPIOE | SYSCTL_PERIPH_GPIOF);
+
+  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOA );
+  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOB );
+  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOC );
+  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOD );
+  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOE );
+  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOF );
+  /*
+   * Pad Configure.. Setting as per the Button Pullups on
+   * the Launch pad (active low).. changing to pulldowns for Orbit
+   */
+  GPIOPadConfigSet(SWTPort, SWT1 | SWT2, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
+
+  GPIOPadConfigSet(BTN1Port, BTN1, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
+  GPIOPadConfigSet(BTN2Port, BTN2, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
+
+  GPIOPadConfigSet(LED1Port, LED1, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
+  GPIOPadConfigSet(LED2Port, LED2, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
+  GPIOPadConfigSet(LED3Port, LED3, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
+  GPIOPadConfigSet(LED4Port, LED4, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
+
+  /*
+   * Initialize Switches as Input
+   */
+  GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
+
+  /*
+   * Initialize Buttons as Input
+   */
+  GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+  GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+
+  /*
+   * Initialize LEDs as Output
+   */
+  GPIOPinTypeGPIOOutput(LED1Port, LED1);
+  GPIOPinTypeGPIOOutput(LED2Port, LED2);
+  GPIOPinTypeGPIOOutput(LED3Port, LED3);
+  GPIOPinTypeGPIOOutput(LED4Port, LED4);
+
+  /*
+   * Enable ADC Periph
+   */
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
+
+  GPIOPinTypeADC(AINPort, AIN);
+
+  /*
+   * Enable ADC with this Sequence
+   * 1. ADCSequenceConfigure()
+   * 2. ADCSequenceStepConfigure()
+   * 3. ADCSequenceEnable()
+   * 4. ADCProcessorTrigger();
+   * 5. Wait for sample sequence ADCIntStatus();
+   * 6. Read From ADC
+   */
+  ADCSequenceConfigure(ADC0_BASE, 0, ADC_TRIGGER_PROCESSOR, 0);
+  ADCSequenceStepConfigure(ADC0_BASE, 0, 0, ADC_CTL_IE | ADC_CTL_END | ADC_CTL_CH0);
+  ADCSequenceEnable(ADC0_BASE, 0);
+
+  /*
+   * Initialize the OLED
+   */
+  OrbitOledInit();
+
+  /*
+   * Reset flags
+   */
+  chSwtCur = 0;
+  chSwtPrev = 0;
+  fClearOled = true;
+
+}
+
 
 #endif // TRACK_H
 
