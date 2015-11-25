@@ -11,7 +11,8 @@
 //Function calling delays, ms
 #define DRAW_DELAY 50
 #define TIME_DELAY 10
-#define TIMER_DELAY 1
+#define TIMER_DELAY 1000
+#define STOPWATCH_DELAY 1
 
 //Current date
 struct date current;
@@ -20,6 +21,15 @@ struct date current;
 #define MAX_ALARMS 100
 struct date alarms[MAX_ALARMS];
 int alarmSize = 0;
+
+//Timers
+#define MAX_TIMERS 100
+int timers[MAX_TIMERS];
+int timerSize = 0;
+
+//Stopwatch
+int stopwatch = 0;
+bool stopwatchRunning = false;
 
 //Initialization function
 //Only called once
@@ -71,14 +81,30 @@ void updateTime() {
 //Update Timer, continuously called
 //TIMER_DELAY
 void updateTimer() {
+	int i;
+	for(i = 0; i < timerSize; i++) {
+		timers[i] --;
+	}
 	return;
 }
 
 void getwatch() {
-  return;
+	current = getDate();
 }
 
-void timer() {
+//Creates a new timer with s seconds left
+void timer(int s) {
+	if(timerSize < MAX_TIMERS) {
+		timers[timerSize] = s;
+		timerSize++;
+	}
+	else {
+		//SUM TING WONG
+		//REALLY WONG
+		//REALLY REALLY WONG
+		//REALLY REALLY REALLY WONG
+		//RILEY WONG
+	}
   return;
 }
 
@@ -89,6 +115,7 @@ void checkAlarm() {
 	for(i = 0; i < alarmSize; i++) {
 		if(timeElapsedMs(alarms[i], getDate()) >= 0) {
 			//RING RING RING RING RING BANANA PHONE
+			//TODO: Flash LEDs
 		}
 	}
 	return;
@@ -109,6 +136,36 @@ void setAlarm(struct date d) {
 		//How do you make more than MAX_ALARMS alarms???
 	}
 	return;
+}
+
+//startStopWatch, starts the stopwatch
+void startStopWatch() {
+	stopwatchRunning = true;
+	//TODO: Continuously call stopwatch
+}
+
+//resetStopWatch, resets the stopwatch
+void resetStopWatch() {
+	stopwatch = 0;
+	stopwatchRunning = false;
+}
+
+//pauseStopWatch, pauses the stopwatch
+void pauseStopWatch() {
+	stopwatchRunning = false;
+}
+
+//runStopWatch, runs the stopwatch
+//STOPWATCH_DELAY
+void runStopWatch() {
+	if(stopwatchRunning) {
+		stopwatch++;
+	}
+}
+
+//getStopWatch, gets the current stopwatch value, ms
+int getStopWatch() {
+	return stopwatch;
 }
 
 #endif // WATCH_H
