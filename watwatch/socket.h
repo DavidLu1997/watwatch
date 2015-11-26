@@ -43,6 +43,11 @@ char stringHours[2];
 //Potentiometer
 int pot = 0;
 
+//Declarations
+void initSocket();
+void drawMenu();
+
+
 //Initializes socket functions
 void initSocket() {
 	OrbitOledInit();
@@ -130,11 +135,6 @@ void drawMenu() {
 
         }
 
-
-}
-
-//Highlights item n
-void highlightItem(int n){
 
 }
 

@@ -29,6 +29,21 @@ int timerSize = 0;
 int stopwatch = 0;
 bool stopwatchRunning = false;
 
+//Declarations
+void initWatch();
+void drawWatch();
+void updateTime();
+void updateTimer();
+void getWatch();
+void timer(int s);
+void checkAlarm();
+void setAlarm(struct date d);
+void startStopWatch();
+void pauseStopWatch();
+void stopStopWatch();
+void resetStopWatch();
+int getStopWatch();
+
 //Initialization function
 //Only called once
 void initWatch() {
