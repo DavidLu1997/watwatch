@@ -17,9 +17,6 @@ extern "C" {
 
 //Function calling delays, ms
 #define DRAW_DELAY 50
-#define STEP_DELAY 100
-#define ACCEL_DELAY 1
-#define TEMP_DELAY 1
 
 //Past range to check steps, ms
 #define STEP_RANGE 500
@@ -217,7 +214,6 @@ int getBPM(){
 }
 
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
-//STEP_DELAY
 int checkStep() {
 	getAccelerationData();
 	//Calculate average acceleration over STEP_RANGE
@@ -237,7 +233,6 @@ int checkStep() {
 }
 
 //Check temperature, continuously called, increments heartBeats if heartbeat occurred in past TEMP_RANGE ms
-//TEMP_DELAY
 void checkHeart() {
   double avg = 0;
   int i = 0;
@@ -257,7 +252,6 @@ void checkHeart() {
 }
 
 //Get temperature data, continuously called
-//TEMP_DELAY
 void getTemperature() {
 	char 	rgchReadTemp[] = {
     0, 0, 0            };

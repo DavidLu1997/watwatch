@@ -9,12 +9,12 @@
 #define BUTTON_A 69
 #define BUTTON_B 100
 
-//Input delay = 50 ms
-#define DELAY 50
-
 //Integer IDs for switches
 #define SWITCH_A 13
 #define SWITCH_B 42
+
+//Menu delay
+#define MENU_DELAY 500
 
 //Variables for displaying steps
 int step;
@@ -57,7 +57,9 @@ void initSocket() {
 //Draws the current menu item
 void drawMenu() {
 
-        //OrbitOledClear();
+	//Draws menu every MENU_DELAY
+	if(millis() % MENU_DELAY) {
+        OrbitOledClear();
 
         step = getSteps();
 
@@ -114,26 +116,31 @@ void drawMenu() {
         OrbitOledSetCursor(11, 3);
         OrbitOledPutString(stringSeconds);
         OrbitOledUpdate;
+
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(RED_LED, LOW);
         
-        //Bottom button
-        GPIOPinTypeGPIOInput(BTN1Port, BTN1);
-        btn1 = GPIOPinRead(BTN1Port, BTN1);
+    }
+
+    //Bottom button
+    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+    btn1 = GPIOPinRead(BTN1Port, BTN1);
         
-        //Top Button
-        GPIOPinTypeGPIOInput(BTN2Port, BTN2);
-        btn2 = GPIOPinRead(BTN2Port, BTN2);
+    //Top Button
+    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+    btn2 = GPIOPinRead(BTN2Port, BTN2);
 
-        GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
-        swt1 = GPIOPinRead(SWT1Port, SWT1);
+    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
+    swt1 = GPIOPinRead(SWT1Port, SWT1);
 
-        //Goes to track screen
-        if (btn1 == BTN1) {
-
-        }
-        //Goes to time screen
-        if (btn2 == BTN2) {
-
-        }
+    //Goes to track screen
+    if (btn1 == BTN1) {
+    	digitalWrite(GREEN_LED, HIGH);
+    }
+    //Goes to time screen
+    if (btn2 == BTN2) {
+    	digitalWrite(RED_LED, HIGH);
+    }
 
 
 }

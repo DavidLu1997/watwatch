@@ -58,7 +58,6 @@ void drawWatch() {
 }
 
 //Checks and updates current time, continuously called
-//TIME_DELAY
 void updateTime() {
 	current = getDate();
 }
