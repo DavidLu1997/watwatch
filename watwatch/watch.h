@@ -39,7 +39,10 @@ void initWatch() {
 //Draws current function, continuously called
 //DRAW_DELAY
 void drawWatch() {
-
+	char *time;
+	sprintf("%d:%d:%d", time, current.hour, current.minute, current.second);
+	OrbitOledSetCursor(1, 2);
+	OrbitOledPutString(time);
 }
 
 //Checks and updates current time, continuously called
