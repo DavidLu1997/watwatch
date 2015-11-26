@@ -43,6 +43,9 @@ void pauseStopWatch();
 void stopStopWatch();
 void resetStopWatch();
 int getStopWatch();
+void drawTimer();
+void drawAlarm();
+void drawStopWatch();
 
 //Initialization function
 //Only called once
@@ -60,6 +63,21 @@ void drawWatch() {
 //Checks and updates current time, continuously called
 void updateTime() {
 	current = getDate();
+}
+
+//Draw timer
+void drawTimer() {
+
+}
+
+//Draw alarm
+void drawAlarm() {
+
+}
+
+//Draw stopWatch
+void drawStopWatch() {
+
 }
 
 //Update Timer, continuously called
