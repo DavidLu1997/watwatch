@@ -171,21 +171,19 @@ void drawMenu() {
 
     //Goes to track screen
     if (btn1 == BTN1) {
-    	digitalWrite(GREEN_LED, HIGH);
+        activeMenu = TRACK;
     }
     //Goes to time screen
     if (btn2 == BTN2) {
-    	digitalWrite(RED_LED, HIGH);
+        activeMenu = TIME;
     }
     //Turn light on when switch is flipped, should actually go to settings during implmentation
     if (swt1 == SWT1) {
-        digitalWrite(RED_LED, HIGH);
+        activeMenu = SETTINGS;
     }
     else {
-         digitalWrite(RED_LED, LOW);
+        activeMenu = MAIN;
     }
-
-
 }
 
 
