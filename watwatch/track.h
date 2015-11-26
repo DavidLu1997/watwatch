@@ -68,6 +68,19 @@ char  chSwtPrev;
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
 bool I2CGenIsNotIdle();
 void DeviceInit();
+void initTrack();
+void setSteps(int s);
+void getAccelerationData();
+void drawTrack(); 
+int getBPM();
+int checkStep();
+void checkHeart();
+void getTemperature(); 
+int getSteps();
+double getDistance(); 
+int getCalories();
+void resetSteps();
+void setSteps();
 
 //Initialization function
 //Only called once
