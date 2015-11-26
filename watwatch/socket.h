@@ -91,13 +91,13 @@ void drawMenu() {
         seconds = current.second;
 
         //Convert ints to strings, then prints them to the screen
-        itoa(hours, stringHours, 10); 
+        itoa(hours, stringHours, 10);
         OrbitOledSetCursor(3, 3);
         OrbitOledPutString(stringHours);
-        
+
         OrbitOledSetCursor(5, 3);
         OrbitOledPutString(":");
-        
+
         //Prints minutes
         itoa(minutes, stringMinutes, 10);
         OrbitOledSetCursor(7, 3);
@@ -105,7 +105,7 @@ void drawMenu() {
 
         OrbitOledSetCursor(9, 3);
         OrbitOledPutString(":");
-        
+
         //Printes seconds
         itoa(seconds, stringSeconds, 10);
         OrbitOledSetCursor(11, 3);
@@ -115,7 +115,7 @@ void drawMenu() {
     //Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
+
     //Top Button
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
@@ -143,4 +143,3 @@ void drawMenu() {
 
 
 #endif //SOCKET_H
-
