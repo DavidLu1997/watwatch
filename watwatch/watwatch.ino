@@ -14,7 +14,7 @@ extern "C" {
 #include "misc.h"
 #include "socket.h"
 
-//#define MENU_DELAY 500;
+#define UPDATE_DELAY 1
 
 void setup()
 {
@@ -30,5 +30,16 @@ void loop() {
 	//getAccelerationData();
 	//Serial.println(data[millis() % STEP_RANGE]);
 	drawMenu();
-	delay(100);
+	updateLoop();
+	delay(1);
+}
+
+//Update Loop, continuously calls functions that must be updated
+//Called every UPDATE_DELAY
+void updateLoop() {
+	getAccelerationData();
+	getTemperature();
+	checkStep();
+	checkHeart();
+	updateTime();
 }
