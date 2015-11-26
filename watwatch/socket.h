@@ -10,13 +10,6 @@
 int step;
 char stringSteps[5];
 
-//Button variables
-long btn1;
-long btn2;
-
-//Switch variables
-long swt1;
-
 //Int variables for time
 long hours = 19;
 long minutes = 0;
@@ -37,9 +30,12 @@ void drawActiveMenu() {
 	if(millis() % MENU_DELAY == 0) {
 		switch(activeMenu) {
 			case MAIN:
+                OrbitOledClear;
 				drawMenu();
 				break;
 			case TRACK:
+                digitalWrite(RED_LED, HIGH);
+                OrbitOledClear;
 				drawTrack();
 				break;
 			case WATCH:

@@ -27,7 +27,7 @@ void setup()
   	initSocket();
   	initTrack();
   	initWatch();
-  	digitalWrite(RED_LED, HIGH);
+  	//digitalWrite(RED_LED, HIGH);
   	lastMS = millis();
 }
 

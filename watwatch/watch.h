@@ -103,7 +103,7 @@ void drawTimer() {
 
 //Draw alarm
 void drawAlarm() {
-
+	
 }
 
 //Update Timer, continuously called
