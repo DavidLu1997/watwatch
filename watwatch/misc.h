@@ -34,6 +34,7 @@ struct date difference(struct date a, struct date b);
 int timeElapsedMs(struct date a, struct date b);
 int timeElapsedS(struct date a, struct date b);
 struct date futureTime(struct date a, int s);
+void drawSetDate();
 
 //Get current date
 struct date getDate() {
@@ -95,6 +96,10 @@ struct date futureTime(struct date a, int s) {
   a.year += a.month / 12;
   a.month = a.month % 12;
   return a;
+}
+
+void drawSetDate() {
+  
 }
 
 #endif // MISC_H

@@ -78,6 +78,8 @@ double getDistance();
 int getCalories();
 void resetSteps();
 void setSteps();
+void drawSetSteps();
+void drawSetHeartbeats();
 
 //Initialization function
 //Only called once
@@ -92,95 +94,6 @@ void initTrack() {
 
   DeviceInit();
 	return;
-}
-
-//Inputs the acceleration data into the given int[] in the form of
-//[0] - X acceleration
-//[1] - Y
-//[2] - Z
-//ACCEL_DELAY
-void getAccelerationData(){
-	short  dataX, dataY, dataZ;
-
-  char  chPwrCtlReg = 0x2D;
-  char  chX0Addr = 0x32;
-  char  chY0Addr = 0x34;
-  char  chZ0Addr = 0x36;
-
-  char  rgchReadAcclX[] = {
-    0, 0, 0            };
-  char  rgchWriteAcclX[] = {
-    0, 0            };
-  char  rgchReadAcclY[] = {
-    0, 0, 0            };
-  char  rgchWriteAcclY[] = {
-    0, 0            };
-  char  rgchReadAcclZ[] = {
-    0, 0, 0            };
-  char  rgchWriteAcclZ[] = {
-    0, 0            };
-
-  if(fClearOled == true) {
-		OrbitOledClear();
-		OrbitOledMoveTo(0,0);
-		OrbitOledSetCursor(0,0);
-		fClearOled = false;
-
-		/*
-		* Enable I2C Peripheral
-		*/
-		SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-		SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
-
-		/*
-		* Set I2C GPIO pins
-		*/
-		GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
-		GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
-		GPIOPinConfigure(I2CSCL);
-		GPIOPinConfigure(I2CSDA);
-
-		/*
-		* Setup I2C
-		*/
-		I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
-
-		/* Initialize the Accelerometer
-		*
-		*/
-		GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
-
-		rgchWriteAcclX[0] = chPwrCtlReg;
-		rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
-		I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
-
-		rgchWriteAcclY[0] = chPwrCtlReg;
-		rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
-		I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
-
-		rgchWriteAcclZ[0] = chPwrCtlReg;
-		rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
-		I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
-
-  }
-
-  rgchReadAcclX[0] = chX0Addr;
-    I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
-
-    dataX = (rgchReadAcclX[2] << 8) | rgchReadAcclX[1];
-
-  rgchReadAcclY[0] = chY0Addr;
-    I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
-
-    dataX = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
-
-  rgchReadAcclZ[0] = chZ0Addr;
-    I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
-
-    dataX = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
-
-	//Store magnitude of acceleration in data
-	data[millis() % STEP_RANGE] = sqrt(dataX * dataX + dataY * dataY + dataZ * dataZ);
 }
 
 //Draws current function, continuously called
@@ -208,6 +121,107 @@ void drawTrack() {
 	OrbitOledSetCursor(START_X + 100, START_Y + 100);
 	OrbitOledPutString("Calories:" + getCalories());
 }
+
+//Draw setSteps
+void drawSetSteps() {
+
+}
+
+//Draw setHeartbeats
+void drawSetHeartbeats() {
+
+}
+
+
+//Inputs the acceleration data into the given int[] in the form of
+//[0] - X acceleration
+//[1] - Y
+//[2] - Z
+//ACCEL_DELAY
+void getAccelerationData(){
+  short  dataX, dataY, dataZ;
+
+  char  chPwrCtlReg = 0x2D;
+  char  chX0Addr = 0x32;
+  char  chY0Addr = 0x34;
+  char  chZ0Addr = 0x36;
+
+  char  rgchReadAcclX[] = {
+    0, 0, 0            };
+  char  rgchWriteAcclX[] = {
+    0, 0            };
+  char  rgchReadAcclY[] = {
+    0, 0, 0            };
+  char  rgchWriteAcclY[] = {
+    0, 0            };
+  char  rgchReadAcclZ[] = {
+    0, 0, 0            };
+  char  rgchWriteAcclZ[] = {
+    0, 0            };
+
+  if(fClearOled == true) {
+    OrbitOledClear();
+    OrbitOledMoveTo(0,0);
+    OrbitOledSetCursor(0,0);
+    fClearOled = false;
+
+    /*
+    * Enable I2C Peripheral
+    */
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
+
+    /*
+    * Set I2C GPIO pins
+    */
+    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+    GPIOPinConfigure(I2CSCL);
+    GPIOPinConfigure(I2CSDA);
+
+    /*
+    * Setup I2C
+    */
+    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+
+    /* Initialize the Accelerometer
+    *
+    */
+    GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
+
+    rgchWriteAcclX[0] = chPwrCtlReg;
+    rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
+
+    rgchWriteAcclY[0] = chPwrCtlReg;
+    rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
+
+    rgchWriteAcclZ[0] = chPwrCtlReg;
+    rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
+
+  }
+
+  rgchReadAcclX[0] = chX0Addr;
+    I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
+
+    dataX = (rgchReadAcclX[2] << 8) | rgchReadAcclX[1];
+
+  rgchReadAcclY[0] = chY0Addr;
+    I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
+
+    dataX = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
+
+  rgchReadAcclZ[0] = chZ0Addr;
+    I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
+
+    dataX = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
+
+  //Store magnitude of acceleration in data
+  data[millis() % STEP_RANGE] = sqrt(dataX * dataX + dataY * dataY + dataZ * dataZ);
+}
+
 
 int getBPM(){
 	return 60;
