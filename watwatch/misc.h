@@ -9,6 +9,8 @@
 #include "Energia.h"
 #include "socket.h"
 
+#define DATE_DELAY 1
+
 struct date {
   int year;
   int month;
@@ -62,8 +64,14 @@ void miscInput(int input, int selected) {
 	}
 }
 
-//Get current date based on program runtime
+//Get current date
 struct date getDate() {
+  return currentDate;
+}
+
+//UpdateDate, updates date, called continuously
+//DATE_DELAY
+void updateDate() {
   currentDate.ms += millis();
   currentDate.second += currentDate.ms / 1000;
   currentDate.ms = currentDate.ms % 1000;
@@ -77,8 +85,6 @@ struct date getDate() {
   currentDate.day = currentDate.day % month[currentDate.month - 1];
   currentDate.year += currentDate.month / 12;
   currentDate.month = currentDate.month % 12;
-  
-  return currentDate;
 }
 
 //Returns absolute value difference between 2 dates
