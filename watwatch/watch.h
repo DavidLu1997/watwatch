@@ -156,7 +156,7 @@ void drawAlarm(){
 	sprintf(str, "Alarm: %d:%d", currentAlarm.hour, currentAlarm.minute);
 	OrbitOledSetCursor(1, 1);
 	OrbitOledPutString(str);
-	sprintf(str, "m  s");
+	sprintf(str, "h  m");
 	OrbitOledSetCursor(8, 3);
 	OrbitOledPutString(str);
 }
@@ -231,7 +231,7 @@ void checkAlarm() {
 	for(i = 0; i < alarmSize; i++) {
 		if(alarms[i].ms == -1)
 			continue;
-		if(timeElapsedMs(alarms[i], getDate()) >= 0) {
+		if(getDate().hour * 60 + getDate().minute - alarms[i].hour * 60 - alarms[i].minute >= 0) {
 			flashRedLED();
 			alarms[i].ms = -1;
 		}
