@@ -24,6 +24,9 @@ char stringSteps[5];
 long btn1;
 long btn2;
 
+//Switch variables
+long swt1;
+
 //Int variables for time
 long hours = 19;
 long minutes = 0;
@@ -115,9 +118,14 @@ void drawMenu() {
         GPIOPinTypeGPIOInput(BTN2Port, BTN2);
         btn2 = GPIOPinRead(BTN2Port, BTN2);
 
+        GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
+        swt1 = GPIOPinRead(SWT1Port, SWT1);
+
+        //Goes to track screen
         if (btn1 == BTN1) {
 
         }
+        //Goes to time screen
         if (btn2 == BTN2) {
 
         }
