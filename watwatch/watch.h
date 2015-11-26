@@ -138,15 +138,26 @@ int getStopWatch() {
 	return stopwatch;
 }
 
-char *getStopWatchTime(){
-	return "19:01:059"; //Min/Seconds/Millis
-}
-
 void drawStopWatch(){
 	const int START_X = 1;
 	const int START_Y = 2;
+	int time = getStopWatch();
+	int hours = time / 3600000;
+	int minutes = (time % 3600000) / 60000;
+	int seconds = (time % 60000) / 1000;
+	int ms = time % 1000;
+	char *str;
 	OrbitOledSetCursor(START_X, START_Y);
-	OrbitOledPutString(getStopWatchTime());
+	if (hours){
+		sprintf("%d:%d:%d:%d", str, hours, minutes, seconds, ms);
+	}else if (minutes){
+		sprintf("%d:%d:%d", str, minutes, seconds, ms);
+	}else if (seconds){
+		sprintf("%d:%d", str, seconds, ms);
+	}else{
+		sprintf("%d", str, ms);
+	}
+	OrbitOledPutString(str);
 }
 
 #endif // WATCH_H
