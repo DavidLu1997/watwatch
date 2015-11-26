@@ -66,7 +66,6 @@ void initWatch() {
 //Draws current function, continuously called
 //DRAW_DELAY
 void drawWatch() {
-<<<<<<< HEAD
         //Display Title
         OrbitOledSetCursor(4 , 1);
         OrbitOledPutString("Title: ");
@@ -89,9 +88,7 @@ void drawWatch() {
         itoa(s_Timer,secDisplay,10);
         OrbitOledSetCursor(15,1);
         OrbitOledPutString(secDisplay); 
-      
-  
-=======
+
 	char *time;
 	sprintf("%d:%d:%d", time, current.hour, current.minute, current.second);
 	OrbitOledSetCursor(1, 2);
@@ -116,7 +113,6 @@ void drawAlarm() {
 //Draw stopWatch
 void drawStopWatch() {
 
->>>>>>> origin/master
 }
 
 //Checks and updates current time, continuously called
