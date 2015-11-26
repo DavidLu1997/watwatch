@@ -45,16 +45,16 @@ void drawActiveMenu() {
 				drawStopWatch();
 				break;
 			case SETTINGS:
-				drawSettings();
+				//drawSettings();
 				break;
 			case SETTIME:
-				drawSetTimes();
+				//drawSetTimes();
 				break;
 			case SETSTEPS:
-				drawSetSteps();
+				//drawSetSteps();
 				break;
 			case SETHEARTBEATS:
-				drawSetHeartbeats();
+				//drawSetHeartbeats();
 				break;
 			default:
 				//SUM TING WONG
@@ -93,7 +93,7 @@ void drawActiveMenu() {
                 //Turn light on when switch is flipped, should actually go to settings during implmentation
                 if (swt1 == SWT1) {
                     //OrbitOledClear();
-                    setActiveMenu(SETTINGS);
+                    //setActiveMenu(SETTINGS);
                 }
                 else {
                     setActiveMenu(MAIN);
@@ -143,7 +143,7 @@ void drawActiveMenu() {
                 swt2 = GPIOPinRead(SWT2Port, SWT2);
 
                 //Goes to timer screen
-                /*if (btn1 == BTN1) {
+                if (btn1 == BTN1) {
                     setActiveMenu(TIMER);
                     break;
                 }
@@ -160,9 +160,45 @@ void drawActiveMenu() {
                 if (swt2 == SWT2) {
                     setActiveMenu(MAIN);
                     break;
-                }*/
+                }
                 break;
             case TIMER:
+
+            //Bottom button
+                btn1 = GPIOPinRead(BTN1Port, BTN1);
+
+                //Top Button
+                btn2 = GPIOPinRead(BTN2Port, BTN2);
+
+                //Switches
+                swt1 = GPIOPinRead(SWT1Port, SWT1);
+                swt2 = GPIOPinRead(SWT2Port, SWT2);
+
+
+               //Change type of input when button is pressed, and will loop
+               if (btn1==BTN1) {
+                     switchOption();
+                     drawTimer();
+               }
+
+               if(btn2==BTN2) {
+                    switch(option) {
+                        case 0:
+                            timeValue *= 1000;
+                            break;
+                        case 1:
+                            timeValue *= 60000;
+                            break;
+                        case 2:
+                            timeValue *= 3600000;
+                            break;
+                    }
+                    timer(timeValue);
+               }
+               //Return to main
+               if (swt2 == SWT2) {
+                    setActiveMenu(MAIN);
+               }
                 break;
             case ALARM:
                 break;

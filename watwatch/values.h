@@ -61,6 +61,7 @@ long swt2;
 int activeMenu = MAIN;
 
 long lastTimestamp = 0;
+long lastTimestampValue = 0;
 
 void setActiveMenu(int screen){
     long time = millis();
@@ -122,5 +123,11 @@ int bpm = 0;
 #define TIMER_DELAY 1000
 #define STOPWATCH_DELAY 1
 #define STEP_DELAY 500
+#define FLASH_DELAY 1000
+
+//Timer Variables
+int timeValue;
+char timerDisplay[2];
+int option = 0;
 
 #endif
