@@ -55,6 +55,9 @@ bool stopwatchRunning = false;
 //Initialization function
 //Only called once
 void initWatch() {
+	GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+	GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+	GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
 	current = getDate();
 	return;
 }
@@ -89,21 +92,16 @@ void drawWatch() {
         OrbitOledSetCursor(13,3);
         OrbitOledPutString(stringSeconds);
 
-	/*char *time;
-	sprintf("%d:%d:%d", time, current.hour, current.minute, current.second);
-	OrbitOledSetCursor(1, 2);
-	OrbitOledPutString(time);*/
-
 	//Bottom button
-    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+    
     btn1 = GPIOPinRead(BTN1Port, BTN1);
 
     //Top Button
-    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+    
     btn2 = GPIOPinRead(BTN2Port, BTN2);
 
     //Switches
-    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
+    
     swt1 = GPIOPinRead(SWT1Port, SWT1);
     swt2 = GPIOPinRead(SWT2Port, SWT2);
 
