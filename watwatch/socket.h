@@ -5,19 +5,6 @@
 #include "watch.h"
 #include "misc.h"
 
-extern "C" {
-  struct date {
-  int year;
-  int month;
-  int day;
-  int hour;
-  int minute;
-  int second;
-  int ms;
-};
-  struct date getDate();
-}
-
 //Integer IDs for buttons
 #define BUTTON_A 69
 #define BUTTON_B 100

@@ -4,12 +4,19 @@
 #ifndef MISC_H
 #define MISC_H
 
-#include "track.h"
-#include "watch.h"
 #include "Energia.h"
-#include "socket.h"
 
 #define DATE_DELAY 1
+
+struct date {
+  int year;
+  int month;
+  int day;
+  int hour;
+  int minute;
+  int second;
+  int ms;
+};
 
 //Hard coded begin date
 struct date startDate = {2015, 11, 26, 11, 30, 0, 0};
