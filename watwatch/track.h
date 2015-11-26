@@ -50,7 +50,7 @@ int steps = 0;
 //Number of heartbeats since start
 int beats = 0;
 
-//Heartbeat per second
+//Heartbeat
 int heartBeats[HEART_RANGE / 1000];
 
 //Accelerometer data for past STEP_RANGE
@@ -236,7 +236,7 @@ void checkHeart() {
   avgDiff /= (TEMP_RANGE / BEAT_FACTOR);
 
   if(avgDiff >= BEAT_SENSITIVITY) {
-	heartBeats[millis() / 1000 % HEART_RANGE]++;
+	heartBeats[millis() / 1000 % (HEART_RANGE / 1000)] += avgDiff / BEAT_SENSITIVITY;
   }
 }
 
