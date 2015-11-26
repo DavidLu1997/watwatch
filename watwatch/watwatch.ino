@@ -12,16 +12,23 @@ extern "C" {
 #include "watch.h"
 #include "track.h"
 #include "misc.h"
+#include "socket.h"
+
+//#define MENU_DELAY 500;
 
 void setup()
 {
+	pinMode(RED_LED, OUTPUT);
 	Serial.begin(9600);
   	Serial.println("Timer");
+  	OrbitOledInit();
+  	
 }
 
 void loop() {
 	//Serial.println(millis());
-	getAccelerationData();
-	Serial.println(data[millis() % STEP_RANGE]);
-	sleep(50);
+	//getAccelerationData();
+	//Serial.println(data[millis() % STEP_RANGE]);
+	drawMenu();
+	delay(100);
 }
