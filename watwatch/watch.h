@@ -25,6 +25,9 @@ void drawTimer();
 void drawAlarm();
 void drawStopWatch();
 void flashLED();
+void flashRedLED();
+void switchUnit();
+void stopWatchSwitch();
 
 //Current date
 struct date current;
@@ -39,11 +42,6 @@ int alarmSize = 0;
 #define MAX_TIMERS 100
 int timers[MAX_TIMERS];
 int timerSize = 0;
-
-//Current Alarm
-#define HOUR 0
-#define MIN 1
-int currentAlarmVal = -1, unit = HOUR;
 
 //Stopwatch
 int stopwatch = 0;
@@ -133,48 +131,47 @@ void drawTimer() {
 
 }
 
-void switchOption() {
+void switchUnit() {
 	long time = millis();
-    if((time - lastTimestampValue)>200){
-        option++;
-        if(option > 2)
-        	option = 0;
-        lastTimestampValue = time;
+    if((time - lastTimestampAlarm)>200){
+        unit = !unit;
+        lastTimestampAlarm = time;
     }
 }
 
 
 //Page to select alarm
 void drawAlarm(){
-	const int MAX_POT_VAL = 2000; //Maybe its more?
 	//Checks input
-	int pot = analogRead(0);
-	long val1 = GPIOPinRead(BTN1Port, BTN1);
-	long val2 = GPIOPinRead(BTN2Port, BTN2);
-	if (val1 == BTN1){
-		unit = !unit;
-	} else if (val2 == BTN2){
-		alarms[alarmSize] = currentAlarm;
-		alarmSize++;
-		setActiveMenu(WATCH);
-	}
+	int pot = analogRead(A0);
+
 	if (unit == HOUR){
-		currentAlarm.hour = ((double)pot) * 24 / MAX_POT_VAL;
-	} else{
-		currentAlarm.minute = ((double)pot) * 60 / MAX_POT_VAL;
-	}
+                currentAlarm.hour = map(pot, 0, 1023, 0, 23) / 4;
+            } else{
+                currentAlarm.minute = map(pot, 0, 1023, 0, 59) / 4;
+            }
+	
 	//Prints stuff
-	char *str;
-	sprintf("Alarm: %d:%d", str, currentAlarm.hour, currentAlarm.minute);
-	OrbitOledSetCursor(10, 10);
+	char str[50];
+	sprintf(str, "Alarm: %d:%d", currentAlarm.hour, currentAlarm.minute);
+	OrbitOledSetCursor(1, 1);
+	OrbitOledPutString(str);
+	sprintf(str, "m  s");
+	OrbitOledSetCursor(8, 3);
 	OrbitOledPutString(str);
 }
 
 long flashed = 0;
+long flashedRed = 0;
 
 void flashLED() {
 	digitalWrite(BLUE_LED, HIGH);
 	flashed = millis();
+}
+
+void flashRedLED() {
+	digitalWrite(RED_LED, HIGH);
+	flashedRed = millis();
 }
 
 //Update Timer, continuously called
@@ -213,22 +210,38 @@ void timer(int s) {
   return;
 }
 
+void switchOption() {
+	long time = millis();
+    if((time - lastTimestampValue)>200){
+        option++;
+        if(option > 2)
+        	option = 0;
+        lastTimestampValue = time;
+    }
+}
+
 //Check alarm, continuously called
 //TIME_DELAY
 void checkAlarm() {
+	if(millis() - flashedRed >= FLASH_DELAY) {
+		digitalWrite(RED_LED, LOW);
+		flashedRed = millis();
+	}
 	int i;
 	for(i = 0; i < alarmSize; i++) {
+		if(alarms[i].ms == -1)
+			continue;
 		if(timeElapsedMs(alarms[i], getDate()) >= 0) {
-			//RING RING RING RING RING BANANA PHONE
-			//TODO: Flash LEDs
+			flashRedLED();
+			alarms[i].ms = -1;
 		}
 	}
 	return;
 }
 
 void setAlarm(struct date d) {
-	if(alarmSize + 1 < MAX_ALARMS) {
-		alarms[alarmSize + 1] = d;
+	if(alarmSize + 1 <= MAX_ALARMS) {
+		alarms[alarmSize] = d;
 		alarmSize++;
 	}
 	else {
@@ -253,11 +266,13 @@ void startStopWatch() {
 void resetStopWatch() {
 	stopwatch = 0;
 	stopwatchRunning = false;
+	lastStopValue = 0;
 }
 
-//pauseStopWatch, pauses the stopwatch
+//pauseStopWatch, pauses/starts the stopwatch
 void pauseStopWatch() {
-	stopwatchRunning = false;
+	stopwatchRunning = !stopwatchRunning;
+	lastStopValue = 0;
 }
 
 //runStopWatch, runs the stopwatch
@@ -273,46 +288,30 @@ int getStopWatch() {
 	return stopwatch;
 }
 
+void stopWatchSwitch(int v) {
+	long time = millis();
+    if((time - lastStopValue)>200){
+        if(v == PAUSE)
+        	pauseStopWatch();
+        if(v == RESET)
+        	resetStopWatch();
+    }
+}
+
 void drawStopWatch(){
 	const int START_X = 1;
 	const int START_Y = 2;
-	int time = getStopWatch();
-	int hours = time / 3600000;
-	int minutes = (time % 3600000) / 60000;
-	int seconds = (time % 60000) / 1000;
-	int ms = time % 1000;
-	char *str;
+	int t = getStopWatch();
+	int hours = t / 3600000;
+	int minutes = (t % 3600000) / 60000;
+	int seconds = (t % 60000) / 1000;
+	int ms = t % 1000;
+	char str[50];
 	OrbitOledSetCursor(START_X, START_Y);
-	if (hours){
-		sprintf("%d:%d:%d:%d", str, hours, minutes, seconds, ms);
-	}else if (minutes){
-		sprintf("%d:%d:%d", str, minutes, seconds, ms);
-	}else if (seconds){
-		sprintf("%d:%d", str, seconds, ms);
-	}else{
-		sprintf("%d", str, ms);
-	}
+	sprintf(str, "%d:%d:%d:%d", hours, minutes, seconds, ms);
 	OrbitOledPutString(str);
-
-	//Bottom button
-    btn1 = GPIOPinRead(BTN1Port, BTN1);
-
-    //Top Button
-    btn2 = GPIOPinRead(BTN2Port, BTN2);
-
-    //Switches
-    swt1 = GPIOPinRead(SWT1Port, SWT1);
-    swt2 = GPIOPinRead(SWT2Port, SWT2);
-
-    if (btn1 == BTN1) {
-    	pauseStopWatch();
-    }
-    if (btn2 == BTN2) {
-    	resetStopWatch();
-    }
-    if (swt2 == SWT2) {
-    	setActiveMenu(MAIN);
-    }
+	if(lastStopValue == -2)
+		startStopWatch();
 }
 
 #endif // WATCH_H

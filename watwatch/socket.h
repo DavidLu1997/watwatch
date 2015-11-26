@@ -201,8 +201,42 @@ void drawActiveMenu() {
                }
                 break;
             case ALARM:
+            btn1 = GPIOPinRead(BTN1Port, BTN1);
+            btn2 = GPIOPinRead(BTN2Port, BTN2);
+            swt2 = GPIOPinRead(SWT2Port, SWT2);
+            if (btn1 == BTN1){
+                switchUnit();
+            }
+            
+            if (btn2 == BTN2){
+                setAlarm(currentAlarm);
+                setActiveMenu(WATCH);
+            }
+
+            if (swt2 == SWT2) {
+                    setActiveMenu(WATCH);
+               }
                 break;
             case STOPWATCH:
+                //Bottom button
+            btn1 = GPIOPinRead(BTN1Port, BTN1);
+
+            //Top Button
+            btn2 = GPIOPinRead(BTN2Port, BTN2);
+
+            //Switches
+            swt1 = GPIOPinRead(SWT1Port, SWT1);
+            swt2 = GPIOPinRead(SWT2Port, SWT2);
+
+            if (btn1 == BTN1) {
+                stopWatchSwitch(PAUSE);
+            }
+            if (btn2 == BTN2) {
+                stopWatchSwitch(RESET);
+            }
+            if (swt2 == SWT2) {
+                setActiveMenu(MAIN);
+            }
                 break;
             case SETTINGS:
                 break;
