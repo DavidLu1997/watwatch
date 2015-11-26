@@ -12,24 +12,6 @@
 #define TIMER_DELAY 1000
 #define STOPWATCH_DELAY 1
 
-//Declarations
-void initWatch();
-void drawWatch();
-void updateTime();
-void updateTimer();
-void getWatch();
-void timer(int s);
-void checkAlarm();
-void setAlarm(struct date d);
-void startStopWatch();
-void pauseStopWatch();
-void stopStopWatch();
-void resetStopWatch();
-int getStopWatch();
-void drawTimer();
-void drawAlarm();
-void drawStopWatch();
-
 //Current date
 struct date current;
 
@@ -43,15 +25,6 @@ int alarmSize = 0;
 int timers[MAX_TIMERS];
 int timerSize = 0;
 
-
-//Timer Data
-int s_Timer=0;
-int m_Timer=0;
-int h_Timer=0;
-
-char secDisplay[2];
-char minDisplay[2];
-char hourDisplay[2];
 //Stopwatch
 int stopwatch = 0;
 bool stopwatchRunning = false;
@@ -60,54 +33,9 @@ bool stopwatchRunning = false;
 //Only called once
 void initWatch() {
 	current = getDate();
-	return;
 }
-
-//Draws current function, continuously called
-//DRAW_DELAY
-void drawWatch() {
-        //Display Title
-        OrbitOledSetCursor(4 , 1);
-        OrbitOledPutString("Title: ");
-
-        //Displaying steps number
-        itoa(h_Timer, hourDisplay, 10);
-        OrbitOledSetCursor(7, 1);
-        OrbitOledPutString(hourDisplay);
-        
-        OrbitOledSetCursor(11,1);
-        OrbitOledPutString(":");
-        
-        itoa(m_Timer, minDisplay, 10);
-        OrbitOledSetCursor(13, 1);
-        OrbitOledPutString(minDisplay);
-       
-        OrbitOledSetCursor(15,1);
-        OrbitOledPutString(":");
-        
-        itoa(s_Timer,secDisplay,10);
-        OrbitOledSetCursor(15,1);
-        OrbitOledPutString(secDisplay); 
-
-	char *time;
-	sprintf("%d:%d:%d", time, current.hour, current.minute, current.second);
-	OrbitOledSetCursor(1, 2);
-	OrbitOledPutString(time);
-}
-
-//Checks and updates current time, continuously called
 void updateTime() {
 	current = getDate();
-}
-
-//Draw timer
-void drawTimer() {
-
-}
-
-//Draw alarm
-void drawAlarm() {
-
 }
 
 //Update Timer, continuously called
