@@ -92,6 +92,7 @@ void drawWatch() {
 
 //Checks and updates current time, continuously called
 void updateTime() {
+	updateDate();
 	current = getDate();
 }
 

@@ -24,12 +24,13 @@ void setup()
   	initSocket();
   	initTrack();
   	initWatch();
+  	digitalWrite(RED_LED, HIGH);
 }
 
 void loop() {
 	drawActiveMenu();
 	updateLoop();
-	delay(1);
+	delay(UPDATE_DELAY);
 }
 
 //Update Loop, continuously calls functions that must be updated

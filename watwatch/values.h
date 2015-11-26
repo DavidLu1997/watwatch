@@ -45,7 +45,7 @@ int pot = 0;
 int activeMenu = MAIN;
 
 //Menu delay
-#define MENU_DELAY 500
+#define MENU_DELAY 1000
 
 //Function calling delays, ms
 #define DRAW_DELAY 50
