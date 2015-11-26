@@ -24,6 +24,7 @@ int getStopWatch();
 void drawTimer();
 void drawAlarm();
 void drawStopWatch();
+void flashLED();
 
 //Current date
 struct date current;
@@ -37,11 +38,6 @@ int alarmSize = 0;
 #define MAX_TIMERS 100
 int timers[MAX_TIMERS];
 int timerSize = 0;
-
-//Timer Variables
-int timeValue;
-char timerDisplay[2];
-int option = 0;
 
 //Current Alarm
 #define HOUR 0
@@ -59,6 +55,10 @@ void initWatch() {
 	GPIOPinTypeGPIOInput(BTN2Port, BTN2);
 	GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
 	current = getDate();
+	int i;
+	for(i = 0; i < MAX_TIMERS; i++) {
+		timers[i] = -1;
+	}
 	return;
 }
 
@@ -68,7 +68,7 @@ void drawWatch() {
 		OrbitOledClear();
         //Main Time Submenu
         OrbitOledSetCursor(8, 1);
-        OrbitOledPutString("Time: ");
+        OrbitOledPutString("Time");
 
         hours = current.hour;
         minutes = current.minute;
@@ -103,65 +103,43 @@ void updateTime() {
 //Draw timer
 void drawTimer() {
 	    //Display Title
-        OrbitOledSetCursor(4 , 1);
+        OrbitOledSetCursor(3 , 1);
         OrbitOledPutString("Timer: ");
 
         //Read pot
         pot = analogRead(A0);
-        pot /= 8;
+        pot = map(pot, 0, 1023, 0, 500);
 
         //Displays timer value
-        timeValue = pot;
+        timeValue = pot / 4;
         itoa(timeValue,timerDisplay,10);
-        OrbitOledSetCursor(7, 1);
+        OrbitOledSetCursor(3, 3);
         OrbitOledPutString(timerDisplay);
 
         //When function is first called
         if (option==0) {
-	        OrbitOledSetCursor(11,3);
-	        OrbitOledPutString("sec");
+	        OrbitOledSetCursor(8,3);
+	        OrbitOledPutString("s");
         }
         else if(option == 1) {
-	        OrbitOledSetCursor(11,3);
-	        OrbitOledPutString("min");
+	        OrbitOledSetCursor(8,3);
+	        OrbitOledPutString("m");
         }
         else if (option == 2) {
-	        OrbitOledSetCursor(11,3);
-	        OrbitOledPutString("hour");
+	        OrbitOledSetCursor(8,3);
+	        OrbitOledPutString("h");
         }
 
-        //Bottom button
-	    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
-	    btn1 = GPIOPinRead(BTN1Port, BTN1);
+}
 
-	    //Top Button
-	    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
-	    btn2 = GPIOPinRead(BTN2Port, BTN2);
-
-	    //Switches
-	    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
-	    swt1 = GPIOPinRead(SWT1Port, SWT1);
-	    swt2 = GPIOPinRead(SWT2Port, SWT2);
-
-
-       //Change type of input when button is pressed, and will loop
-       if (btn1==BTN1) {
-	         if (option <2) {
-	         	option++;
-	         }
-	         else {
-	           option = 0;
-	         }
-       }
-
-       if(btn2==BTN2) {
-         //start counting down...?
-       }
-       //Return to main
-       if (swt2 == SWT2) {
-    		setActiveMenu(MAIN);
-       }
-
+void switchOption() {
+	long time = millis();
+    if((time - lastTimestampValue)>200){
+        option++;
+        if(option > 2)
+        	option = 0;
+        lastTimestampValue = time;
+    }
 }
 
 
@@ -194,12 +172,29 @@ void setAlarm(int alarm) {
 	OrbitOledPutString(str);
 }
 
+long flashed = 0;
+
+void flashLED() {
+	digitalWrite(BLUE_LED, HIGH);
+	flashed = millis();
+}
+
 //Update Timer, continuously called
 //TIMER_DELAY
 void updateTimer() {
+	if(millis() - flashed >= FLASH_DELAY) {
+		digitalWrite(BLUE_LED, LOW);
+		flashed = millis();
+	}
 	int i;
 	for(i = 0; i < timerSize; i++) {
+		if(timers[i] == -1)
+			continue;
 		timers[i] --;
+		if(timers[i] <= 0) {
+			timers[i] = -1;
+			flashLED();
+		}
 	}
 	return;
 }
@@ -302,15 +297,12 @@ void drawStopWatch(){
 	OrbitOledPutString(str);
 
 	//Bottom button
-    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     btn1 = GPIOPinRead(BTN1Port, BTN1);
 
     //Top Button
-    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
 
     //Switches
-    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
     swt1 = GPIOPinRead(SWT1Port, SWT1);
     swt2 = GPIOPinRead(SWT2Port, SWT2);
 

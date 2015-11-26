@@ -245,18 +245,22 @@ void drawTrack() {
   	OrbitOledPutString("Distance:");
   	OrbitOledSetCursor(START_X + 9, START_Y);
   	OrbitOledPutString(distStr);
+    OrbitOledSetCursor(START_X + 13, START_Y);
+    OrbitOledPutString("m");
   	//Calories
   	OrbitOledSetCursor(START_X, START_Y +1);
   	OrbitOledPutString("Calories:");
   	OrbitOledSetCursor(START_X + 9, START_Y + 1);
   	OrbitOledPutString(calStr);
+    OrbitOledSetCursor(START_X + 13, START_Y + 1);
+    OrbitOledPutString("cal");
 
     //Speed
     OrbitOledSetCursor(0, 3);
     OrbitOledPutString("Speed:");
     OrbitOledSetCursor(9, 3);
     OrbitOledPutString(speedString);
-    OrbitOledSetCursor(12, 3);
+    OrbitOledSetCursor(13, 3);
     OrbitOledPutString("m/s");
   }
 

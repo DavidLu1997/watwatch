@@ -39,7 +39,7 @@ void setup()
 void loop() {
 	drawActiveMenu();
 	updateLoop();
-	digitalWrite(GREEN_LED, HIGH);
+	//digitalWrite(GREEN_LED, HIGH);
 	delay(UPDATE_DELAY);
 }
 
