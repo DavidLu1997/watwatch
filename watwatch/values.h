@@ -29,6 +29,12 @@ int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || sta
 //Potentiometer
 int pot = 0;
 
+//Buttons and Switches
+long btn1;
+long btn2;
+long swt1;
+long swt2;
+
 //Menu definitions
 #define MAIN 0
 #define TRACK 1
