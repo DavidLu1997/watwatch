@@ -218,7 +218,7 @@ void drawTrack() {
     OrbitOledClear();
   	//Number of Steps
   	OrbitOledSetCursor(START_X, START_Y);
-  	OrbitOledPutString("Jerks:");
+  	OrbitOledPutString("Steps:");
   	OrbitOledSetCursor(START_X + 6, START_Y);
   	OrbitOledPutString(stepsStr);
   	//Beats Per min
