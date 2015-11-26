@@ -18,20 +18,21 @@ extern "C" {
 
 void setup()
 {
+	//Initialize all functions
 	pinMode(RED_LED, OUTPUT);
-	Serial.begin(9600);
-  	Serial.println("Timer");
-  	OrbitOledInit();
-  	
+  	initSocket();
+  	initTrack();
+  	initWatch();
 }
 
 void loop() {
-	//Serial.println(millis());
-	//getAccelerationData();
-	//Serial.println(data[millis() % STEP_RANGE]);
 	drawMenu();
 	updateLoop();
 	delay(1);
+}
+
+void drawActiveMenu() {
+	
 }
 
 //Update Loop, continuously calls functions that must be updated
@@ -42,4 +43,8 @@ void updateLoop() {
 	checkStep();
 	checkHeart();
 	updateTime();
+
+	if(stopwatchRunning) {
+		runStopWatch();
+	}
 }
