@@ -19,6 +19,7 @@ extern "C" {
 #define ACCELER_DELAY 10
 
 int lastMS = 0;
+int lastMS1 = 0;
 
 void setup()
 {
@@ -29,6 +30,8 @@ void setup()
   	initWatch();
   	digitalWrite(RED_LED, HIGH);
   	lastMS = millis();
+  lastMS1 = millis();
+  randomSeed(analogRead(1));
 }
 
 void loop() {
@@ -45,8 +48,13 @@ void updateLoop() {
 	if(millis() - lastMS >= STEP_DELAY) {
 		checkStep();
                 checkHeart();
+                
 		lastMS = millis();
 	}
+        if(millis() - lastMS1 >= BPM_DELAY) {
+           getBPM();
+          lastMS1 = millis(); 
+        }
 	//checkHeart();
 	updateTime();
         updateTimer();
