@@ -58,7 +58,7 @@ long swt2;
 #define SETHEARTBEATS 9
 
 //Active menu
-int activeMenu = MAIN;
+int activeMenu = TRACK;
 
 //Menu delay
 #define MENU_DELAY 500
@@ -76,7 +76,7 @@ int activeMenu = MAIN;
 #define HEART_RANGE 60000 //1 minute
 
 //Step Tracking Params
-#define STEP_SENSITIVITY 70 //Higher the number = less sensitive
+#define STEP_SENSITIVITY 47 //Higher the number = less sensitive
 #define STEP_DISTANCE 0.7874 //Distance travelled per step in m
 #define WEIGHT 70 //Weight of user in kg
 
