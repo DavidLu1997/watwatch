@@ -17,9 +17,6 @@ extern "C" {
 
 //Function calling delays, ms
 #define DRAW_DELAY 50
-#define STEP_DELAY 100
-#define ACCEL_DELAY 1
-#define TEMP_DELAY 1
 
 //Past range to check steps, ms
 #define STEP_RANGE 500
@@ -81,6 +78,8 @@ double getDistance();
 int getCalories();
 void resetSteps();
 void setSteps();
+void drawSetSteps();
+void drawSetHeartbeats();
 
 //Initialization function
 //Only called once
@@ -97,13 +96,25 @@ void initTrack() {
 	return;
 }
 
+
+//Draw setSteps
+void drawSetSteps() {
+
+}
+
+//Draw setHeartbeats
+void drawSetHeartbeats() {
+
+}
+
+
 //Inputs the acceleration data into the given int[] in the form of
 //[0] - X acceleration
 //[1] - Y
 //[2] - Z
 //ACCEL_DELAY
 void getAccelerationData(){
-	short  dataX, dataY, dataZ;
+  short  dataX, dataY, dataZ;
 
   char  chPwrCtlReg = 0x2D;
   char  chX0Addr = 0x32;
@@ -124,46 +135,46 @@ void getAccelerationData(){
     0, 0            };
 
   if(fClearOled == true) {
-		OrbitOledClear();
-		OrbitOledMoveTo(0,0);
-		OrbitOledSetCursor(0,0);
-		fClearOled = false;
+    OrbitOledClear();
+    OrbitOledMoveTo(0,0);
+    OrbitOledSetCursor(0,0);
+    fClearOled = false;
 
-		/*
-		* Enable I2C Peripheral
-		*/
-		SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-		SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
+    /*
+    * Enable I2C Peripheral
+    */
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
 
-		/*
-		* Set I2C GPIO pins
-		*/
-		GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
-		GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
-		GPIOPinConfigure(I2CSCL);
-		GPIOPinConfigure(I2CSDA);
+    /*
+    * Set I2C GPIO pins
+    */
+    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+    GPIOPinConfigure(I2CSCL);
+    GPIOPinConfigure(I2CSDA);
 
-		/*
-		* Setup I2C
-		*/
-		I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+    /*
+    * Setup I2C
+    */
+    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
 
-		/* Initialize the Accelerometer
-		*
-		*/
-		GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
+    /* Initialize the Accelerometer
+    *
+    */
+    GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
 
-		rgchWriteAcclX[0] = chPwrCtlReg;
-		rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
-		I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
+    rgchWriteAcclX[0] = chPwrCtlReg;
+    rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
 
-		rgchWriteAcclY[0] = chPwrCtlReg;
-		rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
-		I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
+    rgchWriteAcclY[0] = chPwrCtlReg;
+    rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
 
-		rgchWriteAcclZ[0] = chPwrCtlReg;
-		rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
-		I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
+    rgchWriteAcclZ[0] = chPwrCtlReg;
+    rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
 
   }
 
@@ -182,8 +193,8 @@ void getAccelerationData(){
 
     dataX = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
 
-	//Store magnitude of acceleration in data
-	data[millis() % STEP_RANGE] = sqrt(dataX * dataX + dataY * dataY + dataZ * dataZ);
+  //Store magnitude of acceleration in data
+  data[millis() % STEP_RANGE] = sqrt(dataX * dataX + dataY * dataY + dataZ * dataZ);
 }
 
 //Draws current function, continuously called
@@ -238,7 +249,6 @@ int getBPM(){
 }
 
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
-//STEP_DELAY
 int checkStep() {
 	getAccelerationData();
 	//Calculate average acceleration over STEP_RANGE
@@ -258,7 +268,6 @@ int checkStep() {
 }
 
 //Check temperature, continuously called, increments heartBeats if heartbeat occurred in past TEMP_RANGE ms
-//TEMP_DELAY
 void checkHeart() {
   double avg = 0;
   int i = 0;
@@ -278,7 +287,6 @@ void checkHeart() {
 }
 
 //Get temperature data, continuously called
-//TEMP_DELAY
 void getTemperature() {
 	char 	rgchReadTemp[] = {
     0, 0, 0            };
