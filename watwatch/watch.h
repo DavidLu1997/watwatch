@@ -159,7 +159,7 @@ void drawTimer() {
        }
        //Return to main
        if (swt2 == SWT2) {
-    		activeMenu = MAIN;
+    		setActiveMenu(MAIN);
        }
 
 }
@@ -180,7 +180,7 @@ void setAlarm(int alarm) {
 	if (val1 == BTN1){
 		unit = !unit;
 	} else if (val2 == BTN2){
-		activeMenu = WATCH;
+		setActiveMenu(WATCH);
 	}
 	if (unit == HOUR){
 		alarms[alarm].hour = ((double)pot) * 24 / MAX_POT_VAL;
@@ -321,7 +321,7 @@ void drawStopWatch(){
     	resetStopWatch();
     }
     if (swt2 == SWT2) {
-    	activeMenu = MAIN;
+    	setActiveMenu(MAIN);
     }
 }
 
