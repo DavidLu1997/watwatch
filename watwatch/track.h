@@ -289,7 +289,7 @@ void checkStep() {
     data[i] = 0;
 	}
       //steps = avg;
-	avg = avg / (double)STEP_RANGE;
+	avg = avg / (double)(STEP_RANGE / ACCELER_DELAY);
 //steps = avg;
         //totalAss += avg;
 
@@ -310,7 +310,7 @@ void checkHeart() {
   for(i = 0; i < TEMP_RANGE; i++) {
      avg += temp[i];
   }
-  avg /= TEMP_RANGE;
+  avg /= (TEMP_RANGE / ACCELER_DELAY);
   double avgDiff = 0;
   for(i = 0; i < TEMP_RANGE; i++) {
      avgDiff += fabs(temp[i]-avg);

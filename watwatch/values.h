@@ -89,7 +89,7 @@ void setActiveMenu(int screen){
 #define HEART_RANGE 60000 //1 minute
 
 //Step Tracking Params
-#define STEP_SENSITIVITY 47 //Higher the number = less sensitive
+#define STEP_SENSITIVITY 300 //Higher the number = less sensitive
 #define STEP_DISTANCE 0.7874 //Distance travelled per step in m
 #define WEIGHT 70 //Weight of user in kg
 
@@ -126,6 +126,7 @@ int bpm = 0;
 #define STOPWATCH_DELAY 1
 #define STEP_DELAY 500
 #define FLASH_DELAY 1000
+#define ACCELER_DELAY 50
 
 //Timer Variables
 int timeValue;

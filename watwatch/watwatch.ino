@@ -16,10 +16,10 @@ extern "C" {
 #include "values.h"
 
 #define UPDATE_DELAY 1
-#define ACCELER_DELAY 10
 
 int lastMS = 0;
 int lastMS1 = 0;
+int lastMS2 = 0;
 
 void setup()
 {
@@ -32,6 +32,7 @@ void setup()
   	initWatch();
   	lastMS = millis();
   lastMS1 = millis();
+  lastMS2 = millis();
   randomSeed(analogRead(1));
   activeMenu = MAIN;
 }
@@ -46,8 +47,11 @@ void loop() {
 //Update Loop, continuously calls functions that must be updated
 //Called every UPDATE_DELAY
 void updateLoop() {
+	if(millis() - lastMS2 >= ACCELER_DELAY){
 	  getAccelerationData(millis() % STEP_RANGE);
           getTemperature();
+          lastMS2 = millis();
+      }
 	if(millis() - lastMS >= STEP_DELAY) {
 		checkStep();
                 checkHeart();
