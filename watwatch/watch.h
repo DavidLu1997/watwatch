@@ -66,8 +66,8 @@ void initWatch() {
 void drawWatch() {
 		OrbitOledClear();
         //Main Time Submenu
-        OrbitOledSetCursor(8, 1);
-        OrbitOledPutString("Time");
+        OrbitOledSetCursor(1, 1);
+        OrbitOledPutString("Current Time");
 
         hours = current.hour;
         minutes = current.minute;
@@ -307,9 +307,13 @@ void drawStopWatch(){
 	int seconds = (t % 60000) / 1000;
 	int ms = t % 1000;
 	char str[50];
+	OrbitOledSetCursor(START_X, START_Y - 1);
+	OrbitOledPutString("Stopwatch");
 	OrbitOledSetCursor(START_X, START_Y);
 	sprintf(str, "%d:%d:%d:%d", hours, minutes, seconds, ms);
 	OrbitOledPutString(str);
+	OrbitOledSetCursor(START_X, START_Y + 1);
+	OrbitOledPutString("h m s ms");
 	if(lastStopValue == -2)
 		startStopWatch();
 }
