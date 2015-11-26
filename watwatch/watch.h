@@ -69,20 +69,20 @@ void drawWatch() {
         itoa(h_Timer, hourDisplay, 10);
         OrbitOledSetCursor(7, 1);
         OrbitOledPutString(hourDisplay);
-        
+
         OrbitOledSetCursor(11,1);
         OrbitOledPutString(":");
-        
+
         itoa(m_Timer, minDisplay, 10);
         OrbitOledSetCursor(13, 1);
         OrbitOledPutString(minDisplay);
-       
+
         OrbitOledSetCursor(15,1);
         OrbitOledPutString(":");
-        
+
         itoa(s_Timer,secDisplay,10);
         OrbitOledSetCursor(15,1);
-        OrbitOledPutString(secDisplay); 
+        OrbitOledPutString(secDisplay);
 
 	char *time;
 	sprintf("%d:%d:%d", time, current.hour, current.minute, current.second);
