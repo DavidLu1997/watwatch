@@ -81,7 +81,7 @@ int activeMenu = TRACK;
 #define WEIGHT 70 //Weight of user in kg
 
 //Heart Rate Params
-#define BEAT_SENSITIVITY 0.25
+#define BEAT_SENSITIVITY 0.01
 #define BEAT_FACTOR 10
 
 //Number of steps since start
@@ -99,6 +99,12 @@ double data[STEP_RANGE];
 
 //Temperature data for past TEMP_RANGE
 double temp[TEMP_RANGE];
+
+//BPM
+int bpm = 0;
+#define BPM_DELAY 5000
+#define BPM_LOW 60
+#define BPM_HIGH 80
 
 //Function calling delays, ms
 #define DRAW_DELAY 50

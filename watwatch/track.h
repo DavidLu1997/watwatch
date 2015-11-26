@@ -203,7 +203,7 @@ void drawTrack() {
 
   //Converting values to strings
 	itoa(steps, stepsStr, 10);
-	itoa(getBPM(), bpmStr, 10);
+	itoa(bpm, bpmStr, 10);
 	itoa((int)temp[millis() % TEMP_RANGE], tempStrDigit, 10);
 	itoa((int)(temp[millis() % TEMP_RANGE] * 100) % 100, tempStrDecimal, 10);
 	itoa(getDistance(), distStr, 10);
@@ -220,7 +220,7 @@ void drawTrack() {
   	//Beats Per min
   	OrbitOledSetCursor(START_X + 9, START_Y);
   	OrbitOledPutString("BPM:");//BEATS PER MINUTE DUDE
-  	OrbitOledSetCursor(START_X + 14, START_Y);
+  	OrbitOledSetCursor(START_X + 13, START_Y);
   	OrbitOledPutString(bpmStr);
   	//Temperature
   	OrbitOledSetCursor(START_X, START_Y + 2);
@@ -280,7 +280,12 @@ void drawTrack() {
 }
 
 int getBPM(){
-	return 60;
+    /*int sum = 0;
+    int i;
+    for(i = 0; i < TEMP_RANGE / 1000; i++)
+      sum += heartBeats[i];
+	return sum;*/
+    bpm = random(BPM_LOW, BPM_HIGH);
 }
 
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
