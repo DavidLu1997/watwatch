@@ -36,34 +36,6 @@ void initMisc() {
 	return;
 }
 
-//Receives input
-void miscInput(int input, int selected) {
-	switch(input) {
-		case SWITCH_A:
-			//TODO: Switch A
-			break;
-		case SWITCH_B:
-			//TODO: Switch B
-			break;
-		case BUTTON_A:
-			//TODO: Button A
-			break;
-		case BUTTON_B:
-			//TODO: Button B
-			break;
-		case POT:
-			//TODO: Smoke Weed
-			break;
-		default:
-			//SUM TING WONG
-			//REALLY WONG
-			//REALLY REALLY WONG
-			//REALLY REALLY REALLY WONG
-			//RILEY WONG
-			break;
-	}
-}
-
 //Get current date
 struct date getDate() {
   return currentDate;

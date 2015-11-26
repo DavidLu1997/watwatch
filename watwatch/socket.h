@@ -5,6 +5,10 @@
 #include "watch.h"
 #include "misc.h"
 
+//Integer IDs for buttons
+#define BUTTON_A 69
+#define BUTTON_B 100
+
 
 //Input delay = 50 ms
 #define DELAY 50
@@ -13,9 +17,19 @@
 #define SWITCH_A 13
 #define SWITCH_B 42
 
-//Integer IDs for buttons
-#define BUTTON_A 69
-#define BUTTON_B 100
+//Button variables
+long btn1;
+long btn2;
+
+//Int variables for time
+long hours = 19;
+long minutes = 0;
+long seconds = 0;
+
+//Char variables for time
+char stringSeconds[2];
+char stringMinutes[2];
+char stringHours[2];
 
 //Integer ID for potentiometer
 #define POT 420
@@ -73,6 +87,41 @@ void process(int input) {
 
 //Draws the current menu item
 void drawMenu() {
+        hours = getDate().hours;
+        minutes = getDate().minutes;
+        seconds = getDate().seconds;
+        
+        OrbitOledClear();
+        //Convert ints to strings, then prints them to the screen
+        itoa(hours, stringHours, 10); 
+        OrbitOledSetCursor(3, 2);
+        OrbitOledPutString(stringHours);
+        
+        OrbitOledSetCursor(5, 2);
+        OrbitOledPutString(":");
+        
+        //Prints minutes
+        itoa(minutes, stringMinutes, 10);
+        OrbitOledSetCursor(7, 2);
+        OrbitOledPutString(stringMinutes);
+        OrbitOledUpdate;
+        
+        OrbitOledSetCursor(9, 2);
+        OrbitOledPutString(":");
+        
+        //Printes seconds
+        itoa(seconds, stringSeconds, 10);
+        OrbitOledSetCursor(11, 2);
+        OrbitOledPutString(stringSeconds);
+        OrbitOledUpdate;
+        
+        //Bottom button
+        GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+        btn1 = GPIOPinRead(BTN1Port, BTN1);
+        
+        //Top Button
+        GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+        btn2 = GPIOPinRead(BTN2Port, BTN2);
 
 }
 
