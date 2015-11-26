@@ -25,18 +25,21 @@ void setup()
 {
 	//Initialize all functions
 	pinMode(RED_LED, OUTPUT);
+	pinMode(GREEN_LED, OUTPUT);
+	pinMode(BLUE_LED, OUTPUT);
   	initSocket();
   	initTrack();
   	initWatch();
-  	digitalWrite(RED_LED, HIGH);
   	lastMS = millis();
   lastMS1 = millis();
   randomSeed(analogRead(1));
+  activeMenu = MAIN;
 }
 
 void loop() {
 	drawActiveMenu();
 	updateLoop();
+	digitalWrite(GREEN_LED, HIGH);
 	delay(UPDATE_DELAY);
 }
 
