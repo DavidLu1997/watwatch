@@ -58,7 +58,7 @@ long swt2;
 #define SETHEARTBEATS 9
 
 //Active menu
-int activeMenu = TRACK;
+int activeMenu = MAIN;
 
 //Menu delay
 #define MENU_DELAY 500

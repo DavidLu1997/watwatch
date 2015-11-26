@@ -65,6 +65,7 @@ void initWatch() {
 //Draws current function, continuously called
 //DRAW_DELAY
 void drawWatch() {
+		OrbitOledClear();
         //Main Time Submenu
         OrbitOledSetCursor(8, 1);
         OrbitOledPutString("Time: ");
@@ -91,35 +92,6 @@ void drawWatch() {
         itoa(seconds,stringSeconds,10);
         OrbitOledSetCursor(13,3);
         OrbitOledPutString(stringSeconds);
-
-	//Bottom button
-    
-    btn1 = GPIOPinRead(BTN1Port, BTN1);
-
-    //Top Button
-    
-    btn2 = GPIOPinRead(BTN2Port, BTN2);
-
-    //Switches
-    
-    swt1 = GPIOPinRead(SWT1Port, SWT1);
-    swt2 = GPIOPinRead(SWT2Port, SWT2);
-
-	//Goes to track screen
-    if (btn1 == BTN1) {
-        activeMenu = TIMER;
-    }
-    //Goes to watch screen
-    if (btn2 == BTN2) {
-        activeMenu = ALARM;
-    }
-    //Switch to stopwatch submenu
-    if (swt1 == SWT1) {
-        activeMenu = STOPWATCH;
-    }
-    if (swt2 == SWT2) {
-    	activeMenu = MAIN;
-    }
 }
 
 //Checks and updates current time, continuously called

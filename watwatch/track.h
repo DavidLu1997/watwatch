@@ -34,7 +34,7 @@ void checkHeart();
 void getTemperature();
 int getSteps();
 double getDistance();
-int getCalories();
+double getCalories();
 void resetSteps();
 void setSteps();
 void drawSetSteps();
@@ -211,7 +211,7 @@ void drawTrack() {
 
   if (trackScreen == 0) {
     //First screen of info
-
+    OrbitOledClear();
   	//Number of Steps
   	OrbitOledSetCursor(START_X, START_Y);
   	OrbitOledPutString("Jerks:");
@@ -235,46 +235,20 @@ void drawTrack() {
   }
   else if (trackScreen == 1) {
   	//2nd screen of info
-
+    OrbitOledClear();
   	//Distance
-  	OrbitOledSetCursor(START_X, START_Y + 100);
+  	OrbitOledSetCursor(START_X, START_Y);
   	OrbitOledPutString("Distance:");
-  	OrbitOledSetCursor(START_X + 75, START_Y + 100);
+  	OrbitOledSetCursor(START_X + 9, START_Y);
   	OrbitOledPutString(distStr);
   	//Calories
-  	OrbitOledSetCursor(START_X + 100, START_Y + 100);
+  	OrbitOledSetCursor(START_X, START_Y +1);
   	OrbitOledPutString("Calories:");
-  	OrbitOledSetCursor(START_X + 150, START_Y + 100);
+  	OrbitOledSetCursor(START_X + 9, START_Y + 1);
   	OrbitOledPutString(calStr);
   }
 
-    //Bottom Button
-    btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
-    //Top Button
-    btn2 = GPIOPinRead(BTN2Port, BTN2);
-
-    //Switches
-    swt1 = GPIOPinRead(SWT1Port, SWT1);
-    swt2 = GPIOPinRead(SWT2Port, SWT2);
-
-    //Goes to track screen
-    if (btn1 == BTN1) {
-        steps = 0;
-    }
-    if (btn2 == BTN2) {
-        //Reset BPM
-    }
-    //Return to Main
-    if (swt2 == SWT2) {
-        activeMenu = MAIN; 
-    }
-    if (swt1 == SWT1) {
-        trackScreen = 1;
-    }
-    else {
-        trackScreen = 0;
-    }
+    
 
 
 }
@@ -369,10 +343,11 @@ double getDistance() {
 }
 
 //Get calories burnt
-int getCalories() {
-	double kmh = (getDistance() / 1000.0) / (millis() / 1000.0) * 3600;
+double getCalories() {
+	//double kmh = (getDistance() / (millis() / 1000.0)) * 3.6;
 	//Formula obtained from ShapeSense.com
-	return (0.0215 * pow(kmh, 3) - 0.1765 * pow(kmh, 2) + 0.8710 * kmh + 1.8600) * WEIGHT * (millis() / 1000 * 3600);
+	//return (0.0215 * kmh * kmh * kmh - 0.1765 * kmh * kmh + 0.8710 * kmh + 1.4577) * WEIGHT * (millis() / 3600 / 1000);
+  return getDistance() / 10;
 }
 
 //Reset steps

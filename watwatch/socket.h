@@ -9,23 +9,27 @@
 //Variables for displaying steps
 int step;
 char stringSteps[5];
+int set = 0;
 
 //Declarations
 void initSocket();
 void drawMenu();
 void drawActiveMenu();
 
+//LastMS
+int last = 0;
+
 //Draws currently active menu
 void drawActiveMenu() {
-	if(millis() % MENU_DELAY == 0) {
+
+	if(millis() - last >= MENU_DELAY) {
+        last = millis();
+        OrbitOledClear();
 		switch(activeMenu) {
 			case MAIN:
-                OrbitOledClear;
 				drawMenu();
 				break;
 			case TRACK:
-                digitalWrite(RED_LED, HIGH);
-                OrbitOledClear;
 				drawTrack();
 				break;
 			case WATCH:
@@ -61,6 +65,125 @@ void drawActiveMenu() {
 				break;
 		}
 	}
+
+    switch(activeMenu) {
+            case MAIN:
+                
+                //Bottom button
+                btn1 = GPIOPinRead(BTN1Port, BTN1);
+                //Top Button
+                btn2 = GPIOPinRead(BTN2Port, BTN2);
+
+                //Right Switch
+                swt1 = GPIOPinRead(SWT1Port, SWT1);
+
+                //Goes to track screen
+                if (btn1 == BTN1) {
+                    //OrbitOledClear();
+                    activeMenu = TRACK;
+                    break;
+                }
+                //Goes to watch screen
+                if (btn2 == BTN2) {
+                    //OrbitOledClear();
+                    activeMenu = WATCH;
+                    set=1;
+                    break;
+                }
+                //Turn light on when switch is flipped, should actually go to settings during implmentation
+                if (swt1 == SWT1) {
+                    //OrbitOledClear();
+                    activeMenu = SETTINGS;
+                }
+                else {
+                    activeMenu = MAIN;
+                }
+                break;
+            case TRACK:
+                //Bottom Button
+                    btn1 = GPIOPinRead(BTN1Port, BTN1);
+                        
+                    //Top Button
+                    btn2 = GPIOPinRead(BTN2Port, BTN2);
+
+                    //Switches
+                    swt1 = GPIOPinRead(SWT1Port, SWT1);
+                    swt2 = GPIOPinRead(SWT2Port, SWT2);
+
+                    //Resets steps
+                    if (btn1 == BTN1) {
+                        steps = 0;
+                        break;
+                    }
+                    //Return to Main
+                    if (swt2 == SWT2) {
+                        activeMenu = MAIN; 
+                        break;
+                    }
+                    if (swt1 == SWT1) {
+                        trackScreen = 1;
+                    }
+                    else {
+                      //OrbitOledClear();
+                        trackScreen = 0;
+                    }
+                break;
+            case WATCH:
+                //Bottom button
+    
+                btn1 = GPIOPinRead(BTN1Port, BTN1);
+
+                //Top Button
+                
+                btn2 = GPIOPinRead(BTN2Port, BTN2);
+
+                //Switches
+                
+                swt1 = GPIOPinRead(SWT1Port, SWT1);
+                swt2 = GPIOPinRead(SWT2Port, SWT2);
+
+                //Goes to track screen
+                /*if (btn1 == BTN1) {
+                    activeMenu = TIMER;
+                    break;
+                }
+                //Goes to watch screen
+                if (btn2 == BTN2) {
+                    activeMenu = ALARM;
+                    break;
+                }
+                //Switch to stopwatch submenu
+                if (swt1 == SWT1) {
+                    activeMenu = STOPWATCH;
+                    break;
+                }
+                if (swt2 == SWT2) {
+                    activeMenu = MAIN;
+                    break;
+                }*/
+                break;
+            case TIMER:
+                break;
+            case ALARM:
+                break;
+            case STOPWATCH:
+                break;
+            case SETTINGS:
+                break;
+            case SETTIME:
+                break;
+            case SETSTEPS:
+                break;
+            case SETHEARTBEATS:
+                break;
+            default:
+                //SUM TING WONG
+                //REALLY WONG
+                //REALLY REALLY WONG
+                //REALLY REALLY REALLY WONG
+                //RILEY WONG
+                break;
+        }
 }
 
 //Initializes socket functions
@@ -114,32 +237,6 @@ void drawMenu() {
         OrbitOledSetCursor(11, 3);
         OrbitOledPutString(stringSeconds);
         OrbitOledUpdate;
-
-    //Bottom button
-    btn1 = GPIOPinRead(BTN1Port, BTN1);
-
-    //Top Button
-    btn2 = GPIOPinRead(BTN2Port, BTN2);
-
-    //Right Switch
-    swt1 = GPIOPinRead(SWT1Port, SWT1);
-
-    //Goes to track screen
-    if (btn1 == BTN1) {
-        digitalWrite(RED_LED, HIGH);
-        activeMenu = TRACK;
-    }
-    //Goes to watch screen
-    if (btn2 == BTN2) {
-        activeMenu = WATCH;
-    }
-    //Turn light on when switch is flipped, should actually go to settings during implmentation
-    if (swt1 == SWT1) {
-        activeMenu = SETTINGS;
-    }
-    else {
-        activeMenu = MAIN;
-    }
 }
 
 
