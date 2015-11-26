@@ -10,6 +10,7 @@
       #include <OrbitOledChar.h>
       #include <OrbitOledGrph.h>
       #include <stdlib.h>
+      #include <stdbool.h>
       }
       
       //Variables
@@ -25,8 +26,13 @@
       char stringMinutes[2];
       char stringHours[2];
       
+      char stringValue[3];
+      int value;
+      bool increasing = true;
+      
+      
       //Switch variables
-      long swt1;
+      long swt2;
       
       int pot = 0;
       
@@ -50,6 +56,36 @@
         //Top Button
         GPIOPinTypeGPIOInput(BTN2Port, BTN2);
         lBtn2 = GPIOPinRead(BTN2Port, BTN2);
+        
+          
+        GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
+        swt2 = GPIOPinRead(SWT1Port, SWT2);
+        if (swt2 == SWT2) {
+          digitalWrite(RED_LED, HIGH);
+          increasing = true;
+        }
+        else {
+          digitalWrite(RED_LED, LOW);
+          increasing = false;
+        }
+        OrbitOledClear();
+        pot = analogRead(A0);
+        
+        if (increasing) {
+          pot = analogRead(A0);
+          pot = pot / 6;
+          value += pot;
+        }
+        else if (increasing == false) {
+          pot = analogRead(A0);
+          pot = pot / 6;
+          value -= pot;
+        }
+        
+        //Displaying steps number
+        itoa(pot, stringValue, 10);
+        OrbitOledSetCursor(5, 1);
+        OrbitOledPutString(stringValue);
         
         /* //Read potentiometer value
         pot = analogRead(A0);
@@ -211,15 +247,7 @@
               OrbitOledClear();
             }
         }*/
-        
-        GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
-        swt1 = GPIOPinRead(SWT1Port, SWT1);
-        if (swt1 == SWT1) {
-          digitalWrite(RED_LED, HIGH);
-        }
-        else {
-          digitalWrite(RED_LED, LOW);
-        }
+      
         
         
         /* /Leave for Stopwatch effect
