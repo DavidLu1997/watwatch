@@ -5,14 +5,6 @@
 #include "watch.h"
 #include "misc.h"
 
-//Integer IDs for buttons
-#define BUTTON_A 69
-#define BUTTON_B 100
-
-//Integer IDs for switches
-#define SWITCH_A 13
-#define SWITCH_B 42
-
 //Menu delay
 #define MENU_DELAY 500
 
@@ -75,8 +67,6 @@ void drawMenu() {
         hours = getDate().hour;
         minutes = getDate().minute;
         seconds = getDate().second;
-        
-        OrbitOledClear();
 
         //Convert ints to strings, then prints them to the screen
         itoa(hours, stringHours, 10); 
@@ -85,7 +75,6 @@ void drawMenu() {
         
         OrbitOledSetCursor(5, 3);
         OrbitOledPutString(":");
-
 
         //Convert ints to strings, then prints them to the screen
         itoa(hours, stringHours, 10); 
@@ -96,19 +85,12 @@ void drawMenu() {
         OrbitOledSetCursor(5, 2);
         OrbitOledPutString(":");
         
-
-
         //Prints minutes
         itoa(minutes, stringMinutes, 10);
         OrbitOledSetCursor(7, 3);
         OrbitOledPutString(stringMinutes);
 
-        OrbitOledUpdate;
-        
-        OrbitOledSetCursor(9, 2);
-
         OrbitOledSetCursor(9, 3);
-
         OrbitOledPutString(":");
         
         //Printes seconds
@@ -116,9 +98,6 @@ void drawMenu() {
         OrbitOledSetCursor(11, 3);
         OrbitOledPutString(stringSeconds);
         OrbitOledUpdate;
-
-        digitalWrite(GREEN_LED, LOW);
-        digitalWrite(RED_LED, LOW);
         
         }
 
@@ -140,6 +119,13 @@ void drawMenu() {
     //Goes to time screen
     if (btn2 == BTN2) {
     	digitalWrite(RED_LED, HIGH);
+    }
+    //Turn light on when switch is flipped, should actually go to settings during implmentation
+    if (swt1 == SWT1) {
+        digitalWrite(RED_LED, HIGH);
+    }
+    else {
+         digitalWrite(RED_LED, LOW);
     }
 
 
