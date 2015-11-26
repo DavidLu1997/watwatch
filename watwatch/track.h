@@ -299,6 +299,13 @@ void getTemperature() {
   char 	szTemp[6];
 
   if(fClearOled == true) {
+    OrbitOledClear();
+    OrbitOledMoveTo(0,0);
+    OrbitOledSetCursor(0,0);
+    fClearOled = false;
+
+    OrbitOledSetCursor(0, 0);
+    OrbitOledPutString("ShitTemp: ");
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
     SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
