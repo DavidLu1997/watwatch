@@ -173,9 +173,9 @@ void drawMenu() {
     if (btn1 == BTN1) {
         activeMenu = TRACK;
     }
-    //Goes to time screen
+    //Goes to watch screen
     if (btn2 == BTN2) {
-        activeMenu = TIME;
+        activeMenu = WATCH;
     }
     //Turn light on when switch is flipped, should actually go to settings during implmentation
     if (swt1 == SWT1) {
