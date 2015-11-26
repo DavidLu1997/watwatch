@@ -28,6 +28,7 @@
       
       char stringValue[3];
       int value;
+      int extraValue = 81;
       bool increasing = true;
       
       
@@ -69,13 +70,15 @@
           increasing = false;
         }
         OrbitOledClear();
-        if (pot > 500) {
-          pot = 500;
+
+        
+        pot = analogRead(A0);
+        pot /= 50;
+        if (increasing) {
+          value +=pot;
         }
-        else if (pot <= 500) {
-          pot = analogRead(A0);
-          pot /= 8;
-        }
+        else
+          value -= pot;
         
         //Displaying steps number
         itoa(pot, stringValue, 10);

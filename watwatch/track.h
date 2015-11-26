@@ -41,21 +41,6 @@ extern "C" {
 #define BEAT_SENSITIVITY 0.25
 #define BEAT_FACTOR 10
 
-//Number of steps since start
-int steps = 0;
-
-//Number of heartbeats since start
-int beats = 0;
-
-//Heartbeat
-int heartBeats[HEART_RANGE / 1000];
-
-//Accelerometer data for past STEP_RANGE
-double data[STEP_RANGE];
-
-//Temperature data for past TEMP_RANGE
-double temp[TEMP_RANGE];
-
 //Required variables
 bool	fClearOled;
 char  chSwtCur;
