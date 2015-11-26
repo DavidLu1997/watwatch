@@ -7,8 +7,8 @@ extern "C" {
 	#include <OrbitOled.h>
 	#include <OrbitOledChar.h>
 	#include <OrbitOledGrph.h>
-}
 
+}
 #include "watch.h"
 #include "track.h"
 #include "misc.h"
@@ -40,8 +40,7 @@ void loop() {
 //Update Loop, continuously calls functions that must be updated
 //Called every UPDATE_DELAY
 void updateLoop() {
-	if(millis() % ACCELER_DELAY == 0)
-		getAccelerationData();
+	  getAccelerationData(millis() % STEP_RANGE);
 	//getTemperature();
 	if(millis() - lastMS >= STEP_DELAY) {
 		checkStep();
