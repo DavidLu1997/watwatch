@@ -35,10 +35,70 @@ char stringHours[2];
 //Potentiometer
 int pot = 0;
 
+//Menu definitions
+#define MAIN 0
+#define TRACK 1
+#define WATCH 2
+#define TIMER 3
+#define ALARM 4
+#define STOPWATCH 5
+#define SETTINGS 6
+#define SETTIME 7
+#define SETSTEPS 8
+#define SETHEARTBEATS 9
+
+//Active menu
+int activeMenu = 0;
+
 //Declarations
 void initSocket();
 void drawMenu();
+void drawActiveMenu();
 
+//Draws currently active menu
+void drawActiveMenu() {
+	if(millis() % MENU_DELAY) {
+		switch(activeMenu) {
+			case MAIN:
+				drawMenu();
+				break;
+			case TRACK:
+				drawTrack();
+				break;
+			case WATCH:
+				drawWatch();
+				break;
+			case TIMER:
+				drawTimer();
+				break;
+			case ALARM:
+				drawAlarm();
+				break;
+			case STOPWATCH:
+				drawStopWatch();
+				break;
+			case SETTINGS:
+				drawSettings();
+				break;
+			case SETTIME:
+				drawSetTimes();
+				break;
+			case SETSTEPS:
+				drawSetSteps();
+				break;
+			case SETHEARTBEATS:
+				drawSetHeartbeats();
+				break;
+			default:
+				//SUM TING WONG
+				//REALLY WONG
+				//REALLY REALLY WONG
+				//REALLY REALLY REALLY WONG
+				//RILEY WONG
+				break;
+		}
+	}
+}
 
 //Initializes socket functions
 void initSocket() {
@@ -50,7 +110,6 @@ void initSocket() {
 void drawMenu() {
 
 	//Draws menu every MENU_DELAY
-        if(millis() % MENU_DELAY) {
         OrbitOledClear();
 
         step = getSteps();
@@ -98,8 +157,6 @@ void drawMenu() {
         OrbitOledSetCursor(11, 3);
         OrbitOledPutString(stringSeconds);
         OrbitOledUpdate;
-        
-        }
 
     //Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
