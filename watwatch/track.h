@@ -64,6 +64,11 @@ bool	fClearOled;
 char  chSwtCur;
 char  chSwtPrev;
 
+//Declarations
+char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
+bool I2CGenIsNotIdle();
+void DeviceInit();
+
 //Initialization function
 //Only called once
 void initTrack() {
@@ -74,12 +79,10 @@ void initTrack() {
 		data[i] = 0;
 	for(i = 0; i < TEMP_RANGE; i++)
 		temp[i] = 0;
+
+  DeviceInit();
 	return;
 }
-
-char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
-bool I2CGenIsNotIdle();
-void DeviceInit();
 
 //Inputs the acceleration data into the given int[] in the form of
 //[0] - X acceleration
@@ -325,11 +328,6 @@ void setSteps(int s) {
 	steps = s;
 }
 
-//TODO: Put the in the setup code
-void initAccelerometer(){
-	GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
-}
-
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr) {
 
   int 		i;
@@ -513,6 +511,13 @@ void DeviceInit()
   GPIOPinTypeGPIOOutput(LED2Port, LED2);
   GPIOPinTypeGPIOOutput(LED3Port, LED3);
   GPIOPinTypeGPIOOutput(LED4Port, LED4);
+
+  //Initialize Accelerometer input
+  GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
+
+  //Initialize Thermometer input
+  GPIOPinTypeGPIOInput(I2CSDAPort, I2CSDA_PIN);
+  GPIOPinTypeGPIOInput(I2CSCLPort, I2CSCL_PIN);
 
   /*
    * Enable ADC Periph
