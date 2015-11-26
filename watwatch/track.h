@@ -199,7 +199,7 @@ void drawTrack() {
 	const int START_Y = 1;
 
 	//Strings for displaying to screen
-	char *stepsStr, *bpmStr, *tempStrDigit, *tempStrDecimal, *distStr, *calStr;
+	char stepsStr[5], bpmStr[5], tempStrDigit[5], tempStrDecimal[5], distStr[5], calStr[5];
 
   //Converting values to strings
 	itoa(steps, stepsStr, 10);
@@ -214,22 +214,22 @@ void drawTrack() {
 
   	//Number of Steps
   	OrbitOledSetCursor(START_X, START_Y);
-  	OrbitOledPutString("Steps:");
-  	OrbitOledSetCursor(START_X + 5, START_Y);
+  	OrbitOledPutString("Jerks:");
+  	OrbitOledSetCursor(START_X + 6, START_Y);
   	OrbitOledPutString(stepsStr);
   	//Beats Per min
   	OrbitOledSetCursor(START_X + 9, START_Y);
-  	OrbitOledPutString("BMP:");
-  	OrbitOledSetCursor(START_X + 12, START_Y);
+  	OrbitOledPutString("BPM:");//BEATS PER MINUTE DUDE
+  	OrbitOledSetCursor(START_X + 14, START_Y);
   	OrbitOledPutString(bpmStr);
   	//Temperature
   	OrbitOledSetCursor(START_X, START_Y + 2);
-  	OrbitOledPutString("Temperature:");
-  	OrbitOledSetCursor(START_X + 11, START_Y + 2);
+  	OrbitOledPutString("Temp:");
+  	OrbitOledSetCursor(START_X + 6, START_Y + 2);
   	OrbitOledPutString(tempStrDigit);
-    OrbitOledSetCursor(START_X + 13, START_Y + 2);
+    OrbitOledSetCursor(START_X + 8, START_Y + 2);
     OrbitOledPutString(".");
-  	OrbitOledSetCursor(START_X + 1, START_Y + 2);
+  	OrbitOledSetCursor(START_X + 9, START_Y + 2);
   	OrbitOledPutString(tempStrDecimal);
 
   }
