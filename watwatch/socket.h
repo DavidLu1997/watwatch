@@ -4,9 +4,7 @@
 #include "track.h"
 #include "watch.h"
 #include "misc.h"
-
-//Menu delay
-#define MENU_DELAY 500
+#include "values.h"
 
 //Variables for displaying steps
 int step;
@@ -29,27 +27,6 @@ char stringSeconds[2];
 char stringMinutes[2];
 char stringHours[2];
 
-//Integer ID for potentiometer
-#define POT 420
-
-//Potentiometer
-int pot = 0;
-
-//Menu definitions
-#define MAIN 0
-#define TRACK 1
-#define WATCH 2
-#define TIMER 3
-#define ALARM 4
-#define STOPWATCH 5
-#define SETTINGS 6
-#define SETTIME 7
-#define SETSTEPS 8
-#define SETHEARTBEATS 9
-
-//Active menu
-int activeMenu = 0;
-
 //Declarations
 void initSocket();
 void drawMenu();
@@ -57,7 +34,7 @@ void drawActiveMenu();
 
 //Draws currently active menu
 void drawActiveMenu() {
-	if(millis() % MENU_DELAY) {
+	if(millis() % MENU_DELAY == 0) {
 		switch(activeMenu) {
 			case MAIN:
 				drawMenu();
@@ -123,9 +100,9 @@ void drawMenu() {
         OrbitOledSetCursor(11, 1);
         OrbitOledPutString(stringSteps);
 
-        hours = getDate().hour;
-        minutes = getDate().minute;
-        seconds = getDate().second;
+        hours = current.hour;
+        minutes = current.minute;
+        seconds = current.second;
 
         //Convert ints to strings, then prints them to the screen
         itoa(hours, stringHours, 10); 
@@ -133,15 +110,6 @@ void drawMenu() {
         OrbitOledPutString(stringHours);
         
         OrbitOledSetCursor(5, 3);
-        OrbitOledPutString(":");
-
-        //Convert ints to strings, then prints them to the screen
-        itoa(hours, stringHours, 10); 
-        OrbitOledSetCursor(3, 2);
-        OrbitOledPutString(stringHours);
-        
-
-        OrbitOledSetCursor(5, 2);
         OrbitOledPutString(":");
         
         //Prints minutes

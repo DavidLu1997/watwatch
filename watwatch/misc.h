@@ -6,30 +6,9 @@
 
 #include "Energia.h"
 
-#define DATE_DELAY 1
-
-struct date {
-  int year;
-  int month;
-  int day;
-  int hour;
-  int minute;
-  int second;
-  int ms;
-};
-
-//Hard coded begin date
-struct date startDate = {2015, 11, 26, 11, 30, 0, 0};
-
-//Current date
-struct date currentDate = startDate;
-
-//Hard coded day of month
-int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || startDate.year % 400 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30 ,31, 30, 31};
+#include "values.h"
 
 //Declarations
-struct date getDate();
-void updateDate();
 struct date difference(struct date a, struct date b);
 int timeElapsedMs(struct date a, struct date b);
 int timeElapsedS(struct date a, struct date b);
@@ -37,16 +16,18 @@ struct date futureTime(struct date a, int s);
 void drawSettings();
 void drawSetTimes();
 void drawSetDate();
+void updateDate();
+struct date getDate();
 
-//Get current date
+//Get date
 struct date getDate() {
+  updateDate();
   return currentDate;
 }
 
 //UpdateDate, updates date, called continuously
-//DATE_DELAY
 void updateDate() {
-  currentDate.ms += millis();
+  currentDate.ms++;
   currentDate.second += currentDate.ms / 1000;
   currentDate.ms = currentDate.ms % 1000;
   currentDate.minute += currentDate.second / 60;

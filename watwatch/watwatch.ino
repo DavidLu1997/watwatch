@@ -13,6 +13,7 @@ extern "C" {
 #include "track.h"
 #include "misc.h"
 #include "socket.h"
+#include "values.h"
 
 #define UPDATE_DELAY 1
 
@@ -34,10 +35,10 @@ void loop() {
 //Update Loop, continuously calls functions that must be updated
 //Called every UPDATE_DELAY
 void updateLoop() {
-	getAccelerationData();
-	getTemperature();
-	checkStep();
-	checkHeart();
+	//getAccelerationData();
+	//getTemperature();
+	//checkStep();
+	//checkHeart();
 	updateTime();
 
 	if(stopwatchRunning) {

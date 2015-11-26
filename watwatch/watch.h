@@ -5,12 +5,7 @@
 #define WATCH_H
 
 #include "misc.h"
-
-//Function calling delays, ms
-#define DRAW_DELAY 50
-#define TIME_DELAY 10
-#define TIMER_DELAY 1000
-#define STOPWATCH_DELAY 1
+#include "values.h"
 
 //Declarations
 void initWatch();
@@ -118,10 +113,6 @@ void updateTimer() {
 		timers[i] --;
 	}
 	return;
-}
-
-void getwatch() {
-	current = getDate();
 }
 
 //Creates a new timer with s seconds left
