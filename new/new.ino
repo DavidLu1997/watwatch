@@ -25,6 +25,9 @@
       char stringMinutes[2];
       char stringHours[2];
       
+      //Switch variables
+      long swt1;
+      
       int pot = 0;
       
       void setup()
@@ -48,7 +51,7 @@
         GPIOPinTypeGPIOInput(BTN2Port, BTN2);
         lBtn2 = GPIOPinRead(BTN2Port, BTN2);
         
-        //Read potentiometer value
+        /* //Read potentiometer value
         pot = analogRead(A0);
         pot = pot / 4;
         analogWrite(BLUE_LED, pot);
@@ -207,6 +210,15 @@
               delay(100);
               OrbitOledClear();
             }
+        }*/
+        
+        GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
+        swt1 = GPIOPinRead(SWT1Port, SWT1);
+        if (swt1 == SWT1) {
+          digitalWrite(RED_LED, HIGH);
+        }
+        else {
+          digitalWrite(RED_LED, LOW);
         }
         
         

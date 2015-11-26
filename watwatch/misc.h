@@ -27,6 +27,15 @@ struct date currentDate = startDate;
 //Hard coded day of month
 int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || startDate.year % 400 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30 ,31, 30, 31};
 
+//Declarations
+struct date getDate();
+void updateDate();
+struct date difference(struct date a, struct date b);
+int timeElapsedMs(struct date a, struct date b);
+int timeElapsedS(struct date a, struct date b);
+struct date futureTime(struct date a, int s);
+void drawSetDate();
+
 //Get current date
 struct date getDate() {
   return currentDate;
@@ -87,6 +96,10 @@ struct date futureTime(struct date a, int s) {
   a.year += a.month / 12;
   a.month = a.month % 12;
   return a;
+}
+
+void drawSetDate() {
+  
 }
 
 #endif // MISC_H
