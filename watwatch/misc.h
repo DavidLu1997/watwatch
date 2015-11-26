@@ -27,12 +27,6 @@ struct date currentDate = startDate;
 //Hard coded day of month
 int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || startDate.year % 400 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30 ,31, 30, 31};
 
-//Initialization function
-//Only called once
-void initMisc() {
-	return;
-}
-
 //Get current date
 struct date getDate() {
   return currentDate;
