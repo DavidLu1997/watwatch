@@ -172,6 +172,8 @@ void flashLED() {
 void flashRedLED() {
 	digitalWrite(RED_LED, HIGH);
 	flashedRed = millis();
+	delay(1000);
+	digitalWrite(RED_LED, LOW);
 }
 
 //Update Timer, continuously called
@@ -223,15 +225,11 @@ void switchOption() {
 //Check alarm, continuously called
 //TIME_DELAY
 void checkAlarm() {
-	if(millis() - flashedRed >= FLASH_DELAY) {
-		digitalWrite(RED_LED, LOW);
-		flashedRed = millis();
-	}
 	int i;
 	for(i = 0; i < alarmSize; i++) {
 		if(alarms[i].ms == -1)
 			continue;
-		if(getDate().hour * 60 + getDate().minute - alarms[i].hour * 60 - alarms[i].minute >= 0) {
+		if(getDate().minute - alarms[i].minute >= 0) {
 			flashRedLED();
 			alarms[i].ms = -1;
 		}
