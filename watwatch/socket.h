@@ -16,6 +16,10 @@
 #define SWITCH_A 13
 #define SWITCH_B 42
 
+//Variables for displaying steps
+int step;
+char stringSteps[5];
+
 //Button variables
 long btn1;
 long btn2;
@@ -86,31 +90,44 @@ void process(int input) {
 
 //Draws the current menu item
 void drawMenu() {
+
+        //OrbitOledClear();
+
+        step = getSteps();
+
+        //Displaying steps text
+        OrbitOledSetCursor(4 , 1);
+        OrbitOledPutString("Steps: ");
+
+        //Displaying steps number
+        itoa(step, stringSteps, 10);
+        OrbitOledSetCursor(11, 1);
+        OrbitOledPutString(stringSteps);
+
         hours = getDate().hour;
         minutes = getDate().minute;
         seconds = getDate().second;
         
-        OrbitOledClear();
         //Convert ints to strings, then prints them to the screen
         itoa(hours, stringHours, 10); 
-        OrbitOledSetCursor(3, 2);
+        OrbitOledSetCursor(3, 3);
         OrbitOledPutString(stringHours);
         
-        OrbitOledSetCursor(5, 2);
+        OrbitOledSetCursor(5, 3);
         OrbitOledPutString(":");
         
         //Prints minutes
         itoa(minutes, stringMinutes, 10);
-        OrbitOledSetCursor(7, 2);
+        OrbitOledSetCursor(7, 3);
         OrbitOledPutString(stringMinutes);
         OrbitOledUpdate;
         
-        OrbitOledSetCursor(9, 2);
+        OrbitOledSetCursor(9, 3);
         OrbitOledPutString(":");
         
         //Printes seconds
         itoa(seconds, stringSeconds, 10);
-        OrbitOledSetCursor(11, 2);
+        OrbitOledSetCursor(11, 3);
         OrbitOledPutString(stringSeconds);
         OrbitOledUpdate;
         
@@ -121,6 +138,14 @@ void drawMenu() {
         //Top Button
         GPIOPinTypeGPIOInput(BTN2Port, BTN2);
         btn2 = GPIOPinRead(BTN2Port, BTN2);
+
+        if (btn1 == BTN1) {
+
+        }
+        if (btn2 == BTN2) {
+
+        }
+
 
 }
 
