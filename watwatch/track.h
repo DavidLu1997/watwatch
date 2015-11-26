@@ -5,19 +5,15 @@
 #define TRACK_H
 
 extern "C" {
-#include <delay.h>
-#include <FillPat.h>
-#include <I2CEEPROM.h>
-#include <LaunchPad.h>
-#include <OrbitBoosterPackDefs.h>
-#include <OrbitOled.h>
-#include <OrbitOledChar.h>
-#include <OrbitOledGrph.h>
+	#include <delay.h>
+	#include <FillPat.h>
+	#include <I2CEEPROM.h>
+	#include <LaunchPad.h>
+	#include <OrbitBoosterPackDefs.h>
+	#include <OrbitOled.h>
+	#include <OrbitOledChar.h>
+	#include <OrbitOledGrph.h>
 }
-
-#include "watch.h"
-#include "misc.h"
-#include "socket.h"
 
 //Function calling delays, ms
 #define DRAW_DELAY 50
@@ -79,35 +75,6 @@ void initTrack() {
 	for(i = 0; i < TEMP_RANGE; i++)
 		temp[i] = 0;
 	return;
-}
-
-
-//Receives input
-void trackInput(int input, int selected) {
-	switch(input) {
-		case SWITCH_A:
-			//TODO: Switch A
-			break;
-		case SWITCH_B:
-			//TODO: Switch B
-			break;
-		case BUTTON_A:
-			//TODO: Button A
-			break;
-		case BUTTON_B:
-			//TODO: Button B
-			break;
-		case POT:
-			//TODO: Smoke Weed
-			break;
-		default:
-			//SUM TING WONG
-			//REALLY WONG
-			//REALLY REALLY WONG
-			//REALLY REALLY REALLY WONG
-			//RILEY WONG
-			break;
-	}
 }
 
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);

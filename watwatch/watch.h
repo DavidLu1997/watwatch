@@ -4,9 +4,7 @@
 #ifndef WATCH_H
 #define WATCH_H
 
-#include "track.h"
 #include "misc.h"
-#include "socket.h"
 
 //Function calling delays, ms
 #define DRAW_DELAY 50
@@ -36,34 +34,6 @@ bool stopwatchRunning = false;
 void initWatch() {
 	current = getDate();
 	return;
-}
-
-//Receives input in the form of a button/switch/something pressed, and the selected item
-void watchInput(int input, int selected) {
-	switch(input) {
-		case SWITCH_A:
-			//TODO: Switch A
-			break;
-		case SWITCH_B:
-			//TODO: Switch B
-			break;
-		case BUTTON_A:
-			//TODO: Button A
-			break;
-		case BUTTON_B:
-			//TODO: Button B
-			break;
-		case POT:
-			//TODO: Smoke Weed
-			break;
-		default:
-			//SUM TING WONG
-			//REALLY WONG
-			//REALLY REALLY WONG
-			//REALLY REALLY REALLY WONG
-			//RILEY WONG
-			break;
-	}
 }
 
 //Draws current function, continuously called
