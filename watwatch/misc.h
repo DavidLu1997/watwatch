@@ -34,6 +34,8 @@ struct date difference(struct date a, struct date b);
 int timeElapsedMs(struct date a, struct date b);
 int timeElapsedS(struct date a, struct date b);
 struct date futureTime(struct date a, int s);
+void drawSettings();
+void drawSetTimes();
 void drawSetDate();
 
 //Get current date
@@ -99,7 +101,15 @@ struct date futureTime(struct date a, int s) {
 }
 
 void drawSetDate() {
-  
+
+}
+
+void drawSettings() {
+
+}
+
+void drawSetTimes() {
+
 }
 
 #endif // MISC_H
