@@ -142,12 +142,12 @@ void drawActiveMenu() {
                 swt1 = GPIOPinRead(SWT1Port, SWT1);
                 swt2 = GPIOPinRead(SWT2Port, SWT2);
 
-                //Goes to track screen
+                //Goes to timer screen
                 /*if (btn1 == BTN1) {
                     activeMenu = TIMER;
                     break;
                 }
-                //Goes to watch screen
+                //Goes to alarm screen
                 if (btn2 == BTN2) {
                     activeMenu = ALARM;
                     break;
