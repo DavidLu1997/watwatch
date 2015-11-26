@@ -71,13 +71,13 @@ void DeviceInit();
 void initTrack();
 void setSteps(int s);
 void getAccelerationData();
-void drawTrack(); 
+void drawTrack();
 int getBPM();
 int checkStep();
 void checkHeart();
-void getTemperature(); 
+void getTemperature();
 int getSteps();
-double getDistance(); 
+double getDistance();
 int getCalories();
 void resetSteps();
 void setSteps();
@@ -194,22 +194,43 @@ void drawTrack() {
 
 	const int Y_OFFSET = 3;
 	//------------LINE 1-------------
+	char *stepsStr, *bpmStr, *tempStrDigit, *tempStrDecimal, *distStr, *calStr;
+
+	itoa(steps, stepsStr, 10);
+	itoa(getBPM(), bpmStr, 10);
+	itoa((int)temp[millis() % TEMP_RANGE], tempStrDigit, 10);
+	itoa((int)(temp[millis() % TEMP_RANGE] * 100) % 100, tempStrDecimal, 10);
+	itoa(getDistance(), distStr, 10);
+	itoa(getCalories(), calStr, 10);
+
 	//Number of Steps
 	OrbitOledSetCursor(START_X, START_Y);
-	OrbitOledPutString("Steps:" + steps);
+	OrbitOledPutString("Steps:");
+	OrbitOledSetCursor(START_X + 35, START_Y);
+	OrbitOledPutString(stepsStr);
 	//Beats Per min
 	OrbitOledSetCursor(START_X + 50, START_Y);
-	OrbitOledPutString("BMP:" + getBPM());
+	OrbitOledPutString("BMP:");
+	OrbitOledSetCursor(START_X + 85, START_Y);
+	OrbitOledPutString(bpmStr);
 	//Temperature
 	OrbitOledSetCursor(START_X + 100, START_Y);
-	OrbitOledPutString("Temperature:" + getTemperature());
+	OrbitOledPutString("Temperature:");
+	OrbitOledSetCursor(START_X + 150, START_Y);
+	OrbitOledPutString(tempStrDigit);
+	OrbitOledSetCursor(START_X + 180, START_Y);
+	OrbitOledPutString(tempStrDecimal);
 	//--------------LINE 2-----------
 	//Distance
 	OrbitOledSetCursor(START_X, START_Y + 100);
-	OrbitOledPutString("Distance:" + getDistance());
+	OrbitOledPutString("Distance:");
+	OrbitOledSetCursor(START_X + 75, START_Y + 100);
+	OrbitOledPutString(distStr);
 	//Calories
 	OrbitOledSetCursor(START_X + 100, START_Y + 100);
-	OrbitOledPutString("Calories:" + getCalories());
+	OrbitOledPutString("Calories:");
+	OrbitOledSetCursor(START_X + 150, START_Y + 100);
+	OrbitOledPutString(calStr);
 }
 
 int getBPM(){

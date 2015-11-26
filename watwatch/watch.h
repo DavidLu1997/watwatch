@@ -138,5 +138,15 @@ int getStopWatch() {
 	return stopwatch;
 }
 
-#endif // WATCH_H
+char *getStopWatchTime(){
+	return "19:01:059"; //Min/Seconds/Millis
+}
 
+void drawStopWatch(){
+	const int START_X = 1;
+	const int START_Y = 2;
+	OrbitOledSetCursor(START_X, START_Y);
+	OrbitOledPutString(getStopWatchTime());
+}
+
+#endif // WATCH_H
