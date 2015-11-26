@@ -27,7 +27,7 @@ void setup()
   	initSocket();
   	initTrack();
   	initWatch();
-  	//digitalWrite(RED_LED, HIGH);
+  	digitalWrite(RED_LED, HIGH);
   	lastMS = millis();
 }
 
@@ -41,9 +41,11 @@ void loop() {
 //Called every UPDATE_DELAY
 void updateLoop() {
 	  getAccelerationData(millis() % STEP_RANGE);
+          getTemperature();
 	//getTemperature();
 	if(millis() - lastMS >= STEP_DELAY) {
 		checkStep();
+                checkHeart();
 		lastMS = millis();
 	}
 	//checkHeart();
