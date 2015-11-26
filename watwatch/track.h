@@ -45,6 +45,7 @@ extern "C" {
 bool	fClearOled;
 char  chSwtCur;
 char  chSwtPrev;
+
 short  dataX, dataY, dataZ;
 
   char  chPwrCtlReg = 0x2D;
@@ -65,6 +66,7 @@ short  dataX, dataY, dataZ;
   char  rgchWriteAcclZ[] = {
     0, 0            };
 
+
 //Declarations
 int getActiveMenu();
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
@@ -75,7 +77,7 @@ void setSteps(int s);
 void getAccelerationData();
 void drawTrack();
 int getBPM();
-int checkStep();
+void checkStep();
 void checkHeart();
 void getTemperature();
 int getSteps();
@@ -149,18 +151,6 @@ void drawSetHeartbeats(){
 //ACCEL_DELAY
 void getAccelerationData(){
 
-    rgchWriteAcclX[0] = chPwrCtlReg;
-    rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
-
-    rgchWriteAcclY[0] = chPwrCtlReg;
-    rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
-
-    rgchWriteAcclZ[0] = chPwrCtlReg;
-    rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
-
   rgchReadAcclX[0] = chX0Addr;
     I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
 
@@ -169,12 +159,12 @@ void getAccelerationData(){
   rgchReadAcclY[0] = chY0Addr;
     I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
 
-    dataX = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
+    dataY = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
 
   rgchReadAcclZ[0] = chZ0Addr;
     I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
 
-    dataX = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
+    dataZ = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
 
   //Store magnitude of acceleration in data
   data[millis() % STEP_RANGE] = sqrt(dataX * dataX + dataY * dataY + dataZ * dataZ);
@@ -232,21 +222,20 @@ int getBPM(){
 }
 
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
-int checkStep() {
+void checkStep() {
 	//Calculate average acceleration over STEP_RANGE
 	int i;
 	double avg = 0;
 	for(i = 0; i < STEP_RANGE; i++) {
 		avg += data[i];
+    data[i] = 0;
 	}
 	avg = avg / STEP_RANGE;
 
 	//Greater than sensitivity
 	if(avg >= STEP_SENSITIVITY) {
-		return 1;
+		steps++;
 	}
-
-	return 0;
 }
 
 //Check temperature, continuously called, increments heartBeats if heartbeat occurred in past TEMP_RANGE ms
@@ -536,24 +525,6 @@ void DeviceInit()
   GPIOPinTypeGPIOOutput(LED3Port, LED3);
   GPIOPinTypeGPIOOutput(LED4Port, LED4);
 
-  /*
-    * Enable I2C Peripheral
-    */
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
-
-    /*
-    * Setup I2C
-    */
-    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
-    /*
-    * Set I2C GPIO pins
-    */
-    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
-    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
-    GPIOPinConfigure(I2CSCL);
-    GPIOPinConfigure(I2CSDA);
-
   //Initialize Accelerometer input
   GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
 
@@ -592,6 +563,42 @@ void DeviceInit()
   chSwtCur = 0;
   chSwtPrev = 0;
   fClearOled = true;
+
+  /*
+    * Enable I2C Peripheral
+    */
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
+
+    /*
+    * Set I2C GPIO pins
+    */
+    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+    GPIOPinConfigure(I2CSCL);
+    GPIOPinConfigure(I2CSDA);
+
+    /*
+    * Setup I2C
+    */
+    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+
+    /* Initialize the Accelerometer
+    *
+    */
+    GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
+
+    rgchWriteAcclX[0] = chPwrCtlReg;
+    rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
+
+    rgchWriteAcclY[0] = chPwrCtlReg;
+    rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
+
+    rgchWriteAcclZ[0] = chPwrCtlReg;
+    rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
+    I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
 
 }
 

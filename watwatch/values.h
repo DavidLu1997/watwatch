@@ -45,7 +45,7 @@ int pot = 0;
 int activeMenu = MAIN;
 
 //Menu delay
-#define MENU_DELAY 1000
+#define MENU_DELAY 500
 
 //Function calling delays, ms
 #define DRAW_DELAY 50
@@ -65,7 +65,7 @@ int activeMenu = MAIN;
 #define	Z_ADDR 0x36
 
 //Step Tracking Params
-#define STEP_SENSITIVITY 0.1 //Higher the number = less sensitive
+#define STEP_SENSITIVITY 100.0 //Higher the number = less sensitive
 #define STEP_DISTANCE 0.7874 //Distance travelled per step in m
 #define WEIGHT 70 //Weight of user in kg
 
@@ -93,5 +93,6 @@ double temp[TEMP_RANGE];
 #define TIME_DELAY 10
 #define TIMER_DELAY 1000
 #define STOPWATCH_DELAY 1
+#define STEP_DELAY 500
 
 #endif

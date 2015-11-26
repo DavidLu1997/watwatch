@@ -16,6 +16,9 @@ extern "C" {
 #include "values.h"
 
 #define UPDATE_DELAY 1
+#define ACCELER_DELAY 10
+
+int lastMS = 0;
 
 void setup()
 {
@@ -25,6 +28,7 @@ void setup()
   	initTrack();
   	initWatch();
   	digitalWrite(RED_LED, HIGH);
+  	lastMS = millis();
 }
 
 void loop() {
@@ -36,9 +40,13 @@ void loop() {
 //Update Loop, continuously calls functions that must be updated
 //Called every UPDATE_DELAY
 void updateLoop() {
-	//getAccelerationData();
+	if(millis() % ACCELER_DELAY == 0)
+		getAccelerationData();
 	//getTemperature();
-	//checkStep();
+	if(millis() - lastMS >= STEP_DELAY) {
+		checkStep();
+		lastMS = millis();
+	}
 	//checkHeart();
 	updateTime();
 
