@@ -10,23 +10,6 @@
 int step;
 char stringSteps[5];
 
-//Button variables
-long btn1;
-long btn2;
-
-//Switch variables
-long swt1;
-
-//Int variables for time
-long hours = 19;
-long minutes = 0;
-long seconds = 0;
-
-//Char variables for time
-char stringSeconds[2];
-char stringMinutes[2];
-char stringHours[2];
-
 //Declarations
 void initSocket();
 void drawMenu();
@@ -37,9 +20,12 @@ void drawActiveMenu() {
 	if(millis() % MENU_DELAY == 0) {
 		switch(activeMenu) {
 			case MAIN:
+                OrbitOledClear;
 				drawMenu();
 				break;
 			case TRACK:
+                digitalWrite(RED_LED, HIGH);
+                OrbitOledClear;
 				drawTrack();
 				break;
 			case WATCH:
@@ -105,13 +91,13 @@ void drawMenu() {
         seconds = current.second;
 
         //Convert ints to strings, then prints them to the screen
-        itoa(hours, stringHours, 10); 
+        itoa(hours, stringHours, 10);
         OrbitOledSetCursor(3, 3);
         OrbitOledPutString(stringHours);
-        
+
         OrbitOledSetCursor(5, 3);
         OrbitOledPutString(":");
-        
+
         //Prints minutes
         itoa(minutes, stringMinutes, 10);
         OrbitOledSetCursor(7, 3);
@@ -119,7 +105,7 @@ void drawMenu() {
 
         OrbitOledSetCursor(9, 3);
         OrbitOledPutString(":");
-        
+
         //Printes seconds
         itoa(seconds, stringSeconds, 10);
         OrbitOledSetCursor(11, 3);
@@ -129,11 +115,12 @@ void drawMenu() {
     //Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
+
     //Top Button
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
 
+    //Right Switch
     GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
     swt1 = GPIOPinRead(SWT1Port, SWT1);
 
@@ -156,4 +143,3 @@ void drawMenu() {
 
 
 #endif //SOCKET_H
-
