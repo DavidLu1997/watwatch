@@ -57,6 +57,9 @@ char 	rgchReadTemp[] = {
   int		i;
   char 	szTemp[6];
 
+
+  int trackScreen = 0;
+
 // Note, I have no idea how this works but don't touch it!
 void setup_accelerometer() {
 	/*
@@ -118,6 +121,10 @@ void initTrack() {
 		data[i] = 0;
 	for(i = 0; i < TEMP_RANGE; i++)
 		temp[i] = 0;
+
+  GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+  GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+  GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
 
   setup_accelerometer();
   SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
@@ -241,14 +248,13 @@ void drawTrack() {
   	OrbitOledPutString(calStr);
   }
 
-    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+    //Bottom Button
     btn1 = GPIOPinRead(BTN1Port, BTN1);
         
     //Top Button
-    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
 
-    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
+    //Switches
     swt1 = GPIOPinRead(SWT1Port, SWT1);
     swt2 = GPIOPinRead(SWT2Port, SWT2);
 

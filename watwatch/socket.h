@@ -65,6 +65,9 @@ void drawActiveMenu() {
 
 //Initializes socket functions
 void initSocket() {
+    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
+    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
+    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
 	OrbitOledInit();
 	OrbitOledClear();
 }
@@ -113,19 +116,17 @@ void drawMenu() {
         OrbitOledUpdate;
 
     //Bottom button
-    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     btn1 = GPIOPinRead(BTN1Port, BTN1);
 
     //Top Button
-    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
 
     //Right Switch
-    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
     swt1 = GPIOPinRead(SWT1Port, SWT1);
 
     //Goes to track screen
     if (btn1 == BTN1) {
+        digitalWrite(RED_LED, HIGH);
         activeMenu = TRACK;
     }
     //Goes to watch screen
