@@ -15,46 +15,7 @@ extern "C" {
 	#include <OrbitOledGrph.h>
 }
 
-//Function calling delays, ms
-#define DRAW_DELAY 50
-
-//Past range to check steps, ms
-#define STEP_RANGE 500
-
-//Past range to check temperature
-#define TEMP_RANGE 500
-
-//Past Range to store heartbeat data
-#define HEART_RANGE 60000 //1 minute
-
-//Acceleration data memory locations
-#define	X_ADDR 0x32
-#define	Y_ADDR 0x34
-#define	Z_ADDR 0x36
-
-//Step Tracking Params
-#define STEP_SENSITIVITY 1.0 //Higher the number = less sensitive
-#define STEP_DISTANCE 0.7874 //Distance travelled per step in m
-#define WEIGHT 70 //Weight of user in kg
-
-//Heart Rate Params
-#define BEAT_SENSITIVITY 0.25
-#define BEAT_FACTOR 10
-
-//Number of steps since start
-int steps = 0;
-
-//Number of heartbeats since start
-int beats = 0;
-
-//Heartbeat
-int heartBeats[HEART_RANGE / 1000];
-
-//Accelerometer data for past STEP_RANGE
-double data[STEP_RANGE];
-
-//Temperature data for past TEMP_RANGE
-double temp[TEMP_RANGE];
+#include "values.h"
 
 //Required variables
 bool	fClearOled;
@@ -298,15 +259,6 @@ void getTemperature() {
   int		i;
   char 	szTemp[6];
 
-  if(fClearOled == true) {
-    OrbitOledClear();
-    OrbitOledMoveTo(0,0);
-    OrbitOledSetCursor(0,0);
-    fClearOled = false;
-
-    OrbitOledSetCursor(0, 0);
-    OrbitOledPutString("ShitTemp: ");
-
     SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
     SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
 
@@ -318,7 +270,6 @@ void getTemperature() {
     I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
 
     I2CGenTransmit(rgchWriteTemp, 1, WRITE, TEMPADDR);
-  }
 
   rgchReadTemp[0] = 0;
   I2CGenTransmit(rgchReadTemp, 2, READ, TEMPADDR);
