@@ -39,6 +39,7 @@ void resetSteps();
 void setSteps();
 void drawSetSteps();
 void drawSetHeartbeats();
+int getSpeed();
 
 const int chPwrCtlReg = 0x2D;
 const int chX0Addr = 0x32;
@@ -59,6 +60,8 @@ char 	rgchReadTemp[] = {
 
 
   int trackScreen = 0;
+  int speed;
+  char speedString[3];
 
 // Note, I have no idea how this works but don't touch it!
 void setup_accelerometer() {
@@ -208,6 +211,7 @@ void drawTrack() {
 	itoa((int)(temp[millis() % TEMP_RANGE] * 100) % 100, tempStrDecimal, 10);
 	itoa(getDistance(), distStr, 10);
 	itoa(getCalories(), calStr, 10);
+  itoa(getSpeed(), speedString, 10);
 
   if (trackScreen == 0) {
     //First screen of info
@@ -246,11 +250,20 @@ void drawTrack() {
   	OrbitOledPutString("Calories:");
   	OrbitOledSetCursor(START_X + 9, START_Y + 1);
   	OrbitOledPutString(calStr);
+
+    //Speed
+    OrbitOledSetCursor(0, 3);
+    OrbitOledPutString("Speed:");
+    OrbitOledSetCursor(9, 3);
+    OrbitOledPutString(speedString);
+    OrbitOledSetCursor(12, 3);
+    OrbitOledPutString("m/s");
   }
 
-    
+}
 
-
+int getSpeed() {
+    return getDistance() / millis() / 1000;
 }
 
 int getBPM(){
