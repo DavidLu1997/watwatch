@@ -62,6 +62,8 @@ int activeMenu = MAIN;
 
 long lastTimestamp = 0;
 long lastTimestampValue = 0;
+long lastTimestampAlarm = 0;
+long lastStopValue = -2;
 
 void setActiveMenu(int screen){
     long time = millis();
@@ -129,5 +131,14 @@ int bpm = 0;
 int timeValue;
 char timerDisplay[2];
 int option = 0;
+
+//Current Alarm
+#define HOUR 0
+#define MIN 1
+int currentAlarmVal = -1, unit = HOUR;
+
+//StopWatch
+#define PAUSE 0
+#define RESET 1
 
 #endif
