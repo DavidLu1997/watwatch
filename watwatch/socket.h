@@ -112,7 +112,7 @@ void drawActiveMenu() {
 
                     //Resets steps
                     if (btn1 == BTN1) {
-                        steps = 0;
+                        //steps = 0;
                         break;
                     }
                     //Return to Main
