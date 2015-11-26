@@ -18,7 +18,6 @@ extern "C" {
 
 int get_accelerometer_internal(int address);
 
-
 //Declarations
 int getActiveMenu();
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
@@ -120,6 +119,8 @@ void initTrack() {
 		temp[i] = 0;
 
   setup_accelerometer();
+  
+  //Heartbeat
   SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
     SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
 
@@ -138,14 +139,14 @@ void initTrack() {
 void drawSetSteps(){
 	//Initialization
 	char *str;
-	pot = analogRead(0);
-	btn1 = GPIOPinRead(BTN1Port, BTN1);
-	btn2 = GPIOPinRead(BTN2Port, BTN2);
+	int pot = analogRead(0);
+	long val1 = GPIOPinRead(BTN1Port, BTN1);
+	long val2 = GPIOPinRead(BTN2Port, BTN2);
 	//Listen for changes in input
-	if (btn1 == BTN1){
+	if (val1 == BTN1){
 		steps = pot;
 		activeMenu = SETTINGS;
-	} else if (btn2 == BTN2){
+	} else if (val2 == BTN2){
 		activeMenu = SETTINGS;
 	}
 	//Draws Steps
@@ -157,14 +158,14 @@ void drawSetSteps(){
 void drawSetHeartbeats(){
 	//Initialization
 	char *str;
-	pot = analogRead(0);
-	btn1 = GPIOPinRead(BTN1Port, BTN1);
-	btn2 = GPIOPinRead(BTN2Port, BTN2);
+	int pot = analogRead(0);
+	long val1 = GPIOPinRead(BTN1Port, BTN1);
+	long val2 = GPIOPinRead(BTN2Port, BTN2);
 	//Listen for changes in input
-	if (btn1 == BTN1){
+	if (val1 == BTN1){
 		beats = pot;
 		activeMenu = SETTINGS;
-	} else if (btn2 == BTN2){
+	} else if (val2 == BTN2){
 		activeMenu = SETTINGS;
 	} else{
 		//Draws Steps
@@ -188,89 +189,48 @@ void getAccelerationData(int count){
 //Draws current function, continuously called
 //DRAW_DELAY
 void drawTrack() {
-	const int START_X = 0;
-	const int START_Y = 1;
+	const int START_X = 1;
+	const int START_Y = 2;
 
-	//Strings for displaying to screen
+	const int Y_OFFSET = 3;
+	//------------LINE 1-------------
 	char *stepsStr, *bpmStr, *tempStrDigit, *tempStrDecimal, *distStr, *calStr;
 
-  //Converting values to strings
-	itoa(steps, stepsStr, 10);
+	itoa(get_accelerometer_x(), stepsStr, 10);
 	itoa(getBPM(), bpmStr, 10);
 	itoa((int)temp[millis() % TEMP_RANGE], tempStrDigit, 10);
 	itoa((int)(temp[millis() % TEMP_RANGE] * 100) % 100, tempStrDecimal, 10);
 	itoa(getDistance(), distStr, 10);
 	itoa(getCalories(), calStr, 10);
 
-  if (trackScreen == 0) {
-    //First screen of info
-
-  	//Number of Steps
-  	OrbitOledSetCursor(START_X, START_Y);
-  	OrbitOledPutString("Steps:");
-  	OrbitOledSetCursor(START_X + 5, START_Y);
-  	OrbitOledPutString(stepsStr);
-  	//Beats Per min
-  	OrbitOledSetCursor(START_X + 9, START_Y);
-  	OrbitOledPutString("BMP:");
-  	OrbitOledSetCursor(START_X + 12, START_Y);
-  	OrbitOledPutString(bpmStr);
-  	//Temperature
-  	OrbitOledSetCursor(START_X, START_Y + 2);
-  	OrbitOledPutString("Temperature:");
-  	OrbitOledSetCursor(START_X + 11, START_Y + 2);
-  	OrbitOledPutString(tempStrDigit);
-    OrbitOledSetCursor(START_X + 13, START_Y + 2);
-    OrbitOledPutString(".");
-  	OrbitOledSetCursor(START_X + 1, START_Y + 2);
-  	OrbitOledPutString(tempStrDecimal);
-
-  }
-  else if (trackScreen == 1) {
-  	//2nd screen of info
-
-  	//Distance
-  	OrbitOledSetCursor(START_X, START_Y + 100);
-  	OrbitOledPutString("Distance:");
-  	OrbitOledSetCursor(START_X + 75, START_Y + 100);
-  	OrbitOledPutString(distStr);
-  	//Calories
-  	OrbitOledSetCursor(START_X + 100, START_Y + 100);
-  	OrbitOledPutString("Calories:");
-  	OrbitOledSetCursor(START_X + 150, START_Y + 100);
-  	OrbitOledPutString(calStr);
-  }
-
-    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
-    btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
-    //Top Button
-    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
-    btn2 = GPIOPinRead(BTN2Port, BTN2);
-
-    GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
-    swt1 = GPIOPinRead(SWT1Port, SWT1);
-    swt2 = GPIOPinRead(SWT2Port, SWT2);
-
-    //Goes to track screen
-    if (btn1 == BTN1) {
-        steps = 0;
-    }
-    if (btn2 == BTN2) {
-        //Reset BPM
-    }
-    //Return to Main
-    if (swt2 == SWT2) {
-        activeMenu = MAIN; 
-    }
-    if (swt1 == SWT1) {
-        trackScreen = 1;
-    }
-    else {
-        trackScreen = 0;
-    }
-
-
+	//Number of Steps
+	OrbitOledSetCursor(START_X, START_Y);
+	OrbitOledPutString("Steps:");
+	OrbitOledSetCursor(START_X + 35, START_Y);
+	OrbitOledPutString(stepsStr);
+	//Beats Per min
+	OrbitOledSetCursor(START_X + 50, START_Y);
+	OrbitOledPutString("BMP:");
+	OrbitOledSetCursor(START_X + 85, START_Y);
+	OrbitOledPutString(bpmStr);
+	//Temperature
+	OrbitOledSetCursor(START_X + 100, START_Y);
+	OrbitOledPutString("Temperature:");
+	OrbitOledSetCursor(START_X + 150, START_Y);
+	OrbitOledPutString(tempStrDigit);
+	OrbitOledSetCursor(START_X + 180, START_Y);
+	OrbitOledPutString(tempStrDecimal);
+	//--------------LINE 2-----------
+	//Distance
+	OrbitOledSetCursor(START_X, START_Y + 100);
+	OrbitOledPutString("Distance:");
+	OrbitOledSetCursor(START_X + 75, START_Y + 100);
+	OrbitOledPutString(distStr);
+	//Calories
+	OrbitOledSetCursor(START_X + 100, START_Y + 100);
+	OrbitOledPutString("Calories:");
+	OrbitOledSetCursor(START_X + 150, START_Y + 100);
+	OrbitOledPutString(calStr);
 }
 
 int getBPM(){
