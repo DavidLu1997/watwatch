@@ -59,7 +59,7 @@
         
           
         GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
-        swt2 = GPIOPinRead(SWT1Port, SWT2);
+        swt2 = GPIOPinRead(SWT2Port, SWT2);
         if (swt2 == SWT2) {
           digitalWrite(RED_LED, HIGH);
           increasing = true;
