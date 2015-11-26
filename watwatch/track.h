@@ -14,58 +14,9 @@ extern "C" {
 	#include <OrbitOledChar.h>
 	#include <OrbitOledGrph.h>
 }
+#include "Energia.h"
 
-//Function calling delays, ms
-#define DRAW_DELAY 50
-
-//Past range to check steps, ms
-#define STEP_RANGE 500
-
-//Past range to check temperature
-#define TEMP_RANGE 500
-
-//Past Range to store heartbeat data
-#define HEART_RANGE 60000 //1 minute
-
-//Acceleration data memory locations
-#define	X_ADDR 0x32
-#define	Y_ADDR 0x34
-#define	Z_ADDR 0x36
-
-//Step Tracking Params
-#define STEP_SENSITIVITY 1.0 //Higher the number = less sensitive
-#define STEP_DISTANCE 0.7874 //Distance travelled per step in m
-#define WEIGHT 70 //Weight of user in kg
-
-//Heart Rate Params
-#define BEAT_SENSITIVITY 0.25
-#define BEAT_FACTOR 10
-
-//Required variables
-bool	fClearOled;
-char  chSwtCur;
-char  chSwtPrev;
-
-short  dataX, dataY, dataZ;
-
-  char  chPwrCtlReg = 0x2D;
-  char  chX0Addr = 0x32;
-  char  chY0Addr = 0x34;
-  char  chZ0Addr = 0x36;
-
-  char  rgchReadAcclX[] = {
-    0, 0, 0            };
-  char  rgchWriteAcclX[] = {
-    0, 0            };
-  char  rgchReadAcclY[] = {
-    0, 0, 0            };
-  char  rgchWriteAcclY[] = {
-    0, 0            };
-  char  rgchReadAcclZ[] = {
-    0, 0, 0            };
-  char  rgchWriteAcclZ[] = {
-    0, 0            };
-
+int get_accelerometer_internal(int address);
 
 //Declarations
 int getActiveMenu();
@@ -74,7 +25,7 @@ bool I2CGenIsNotIdle();
 void DeviceInit();
 void initTrack();
 void setSteps(int s);
-void getAccelerationData();
+void getAccelerationData(int count);
 void drawTrack();
 int getBPM();
 void checkStep();
@@ -88,6 +39,74 @@ void setSteps();
 void drawSetSteps();
 void drawSetHeartbeats();
 
+const int chPwrCtlReg = 0x2D;
+const int chX0Addr = 0x32;
+const int chY0Addr = 0x34;
+const int chZ0Addr = 0x36;
+
+char rgchWriteAccl[3];
+
+char 	rgchReadTemp[] = {
+    0, 0, 0            };
+  char 	rgchWriteTemp[] = {
+    1, 0x20            };
+  short tempReg;
+  short	tempWhole;
+  short	tempDec;
+  int		i;
+  char 	szTemp[6];
+
+// Note, I have no idea how this works but don't touch it!
+void setup_accelerometer() {
+	/*
+	* Enable I2C Peripheral
+	*/
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+	SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
+	
+	/*
+	* Set I2C GPIO pins
+	*/
+	GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+	GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+	GPIOPinConfigure(I2CSCL);
+	GPIOPinConfigure(I2CSDA);
+	
+	/*
+	* Setup I2C
+	*/
+	I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+	
+	/* Initialize the Accelerometer
+	*
+	*/
+	GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
+	
+	rgchWriteAccl[0] = chPwrCtlReg;
+	rgchWriteAccl[1] = 1 << 3;		// sets Accl in measurement mode
+	I2CGenTransmit(rgchWriteAccl, 1, WRITE, ACCLADDR);
+}
+
+int get_accelerometer_x() {
+	return get_accelerometer_internal(chX0Addr);
+}
+
+int get_accelerometer_y() {
+	return get_accelerometer_internal(chY0Addr);
+}
+
+int get_accelerometer_z() {
+	return get_accelerometer_internal(chZ0Addr);
+}
+
+int get_accelerometer_internal(int address) {
+	char rgchReadAccl[3];
+	rgchReadAccl[0] = address;
+	I2CGenTransmit(rgchReadAccl, 2, READ, ACCLADDR);
+	return (short) (rgchReadAccl[2] << 8) | rgchReadAccl[1];
+}
+
+
 //Initialization function
 //Only called once
 void initTrack() {
@@ -99,7 +118,18 @@ void initTrack() {
 	for(i = 0; i < TEMP_RANGE; i++)
 		temp[i] = 0;
 
-  DeviceInit();
+  setup_accelerometer();
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
+
+    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+    GPIOPinConfigure(I2CSCL);
+    GPIOPinConfigure(I2CSDA);
+
+    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+
+    I2CGenTransmit(rgchWriteTemp, 1, WRITE, TEMPADDR);
 	return;
 }
 
@@ -149,25 +179,9 @@ void drawSetHeartbeats(){
 //[1] - Y
 //[2] - Z
 //ACCEL_DELAY
-void getAccelerationData(){
-
-  rgchReadAcclX[0] = chX0Addr;
-    I2CGenTransmit(rgchReadAcclX, 2, READ, ACCLADDR);
-
-    dataX = (rgchReadAcclX[2] << 8) | rgchReadAcclX[1];
-
-  rgchReadAcclY[0] = chY0Addr;
-    I2CGenTransmit(rgchReadAcclY, 2, READ, ACCLADDR);
-
-    dataY = (rgchReadAcclY[2] << 8) | rgchReadAcclY[1];
-
-  rgchReadAcclZ[0] = chZ0Addr;
-    I2CGenTransmit(rgchReadAcclZ, 2, READ, ACCLADDR);
-
-    dataZ = (rgchReadAcclZ[2] << 8) | rgchReadAcclZ[1];
-
-  //Store magnitude of acceleration in data
-  data[millis() % STEP_RANGE] = sqrt(dataX * dataX + dataY * dataY + dataZ * dataZ);
+void getAccelerationData(int count){
+  
+  data[count] = get_accelerometer_x() + get_accelerometer_y() + get_accelerometer_z();
 }
 
 //Draws current function, continuously called
@@ -180,7 +194,7 @@ void drawTrack() {
 	//------------LINE 1-------------
 	char *stepsStr, *bpmStr, *tempStrDigit, *tempStrDecimal, *distStr, *calStr;
 
-	itoa(steps, stepsStr, 10);
+	itoa(get_accelerometer_x(), stepsStr, 10);
 	itoa(getBPM(), bpmStr, 10);
 	itoa((int)temp[millis() % TEMP_RANGE], tempStrDigit, 10);
 	itoa((int)(temp[millis() % TEMP_RANGE] * 100) % 100, tempStrDecimal, 10);
@@ -225,17 +239,24 @@ int getBPM(){
 void checkStep() {
 	//Calculate average acceleration over STEP_RANGE
 	int i;
-	double avg = 0;
+	int avg = 0;
 	for(i = 0; i < STEP_RANGE; i++) {
-		avg += data[i];
+		avg += abs((int)data[i]);
     data[i] = 0;
 	}
-	avg = avg / STEP_RANGE;
+      //steps = avg;
+	avg = avg / (double)STEP_RANGE;
+//steps = avg;
+        //totalAss += avg;
 
 	//Greater than sensitivity
 	if(avg >= STEP_SENSITIVITY) {
+                //steps = -1;
 		steps++;
 	}
+        //steps = (int)avg*1000;
+        //steps = totalAss / 10000;
+//steps++;
 }
 
 //Check temperature, continuously called, increments heartBeats if heartbeat occurred in past TEMP_RANGE ms
@@ -259,37 +280,7 @@ void checkHeart() {
 
 //Get temperature data, continuously called
 void getTemperature() {
-	char 	rgchReadTemp[] = {
-    0, 0, 0            };
-  char 	rgchWriteTemp[] = {
-    1, 0x20            };
-  short tempReg;
-  short	tempWhole;
-  short	tempDec;
-  int		i;
-  char 	szTemp[6];
-
-  if(fClearOled == true) {
-    OrbitOledClear();
-    OrbitOledMoveTo(0,0);
-    OrbitOledSetCursor(0,0);
-    fClearOled = false;
-
-    OrbitOledSetCursor(0, 0);
-    OrbitOledPutString("ShitTemp: ");
-
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
-
-    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
-    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
-    GPIOPinConfigure(I2CSCL);
-    GPIOPinConfigure(I2CSDA);
-
-    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
-
-    I2CGenTransmit(rgchWriteTemp, 1, WRITE, TEMPADDR);
-  }
+	
 
   rgchReadTemp[0] = 0;
   I2CGenTransmit(rgchReadTemp, 2, READ, TEMPADDR);
@@ -466,139 +457,6 @@ char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr) {
 bool I2CGenIsNotIdle() {
 
   return !I2CMasterBusBusy(I2C0_BASE);
-
-}
-
-void DeviceInit()
-{
-  /*
-   * First, Set Up the Clock.
-   * Main OSC     -> SYSCTL_OSC_MAIN
-   * Runs off 16MHz clock -> SYSCTL_XTAL_16MHZ
-   * Use PLL      -> SYSCTL_USE_PLL
-   * Divide by 4    -> SYSCTL_SYSDIV_4
-   */
-  SysCtlClockSet(SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ | SYSCTL_USE_PLL | SYSCTL_SYSDIV_4);
-
-  /*
-   * Enable and Power On All GPIO Ports
-   */
-  //SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOA | SYSCTL_PERIPH_GPIOB | SYSCTL_PERIPH_GPIOC |
-  //            SYSCTL_PERIPH_GPIOD | SYSCTL_PERIPH_GPIOE | SYSCTL_PERIPH_GPIOF);
-
-  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOA );
-  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOB );
-  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOC );
-  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOD );
-  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOE );
-  SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOF );
-  /*
-   * Pad Configure.. Setting as per the Button Pullups on
-   * the Launch pad (active low).. changing to pulldowns for Orbit
-   */
-  GPIOPadConfigSet(SWTPort, SWT1 | SWT2, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
-
-  GPIOPadConfigSet(BTN1Port, BTN1, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
-  GPIOPadConfigSet(BTN2Port, BTN2, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
-
-  GPIOPadConfigSet(LED1Port, LED1, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
-  GPIOPadConfigSet(LED2Port, LED2, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
-  GPIOPadConfigSet(LED3Port, LED3, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
-  GPIOPadConfigSet(LED4Port, LED4, GPIO_STRENGTH_8MA_SC, GPIO_PIN_TYPE_STD);
-
-  /*
-   * Initialize Switches as Input
-   */
-  GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
-
-  /*
-   * Initialize Buttons as Input
-   */
-  GPIOPinTypeGPIOInput(BTN1Port, BTN1);
-  GPIOPinTypeGPIOInput(BTN2Port, BTN2);
-
-  /*
-   * Initialize LEDs as Output
-   */
-  GPIOPinTypeGPIOOutput(LED1Port, LED1);
-  GPIOPinTypeGPIOOutput(LED2Port, LED2);
-  GPIOPinTypeGPIOOutput(LED3Port, LED3);
-  GPIOPinTypeGPIOOutput(LED4Port, LED4);
-
-  //Initialize Accelerometer input
-  GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
-
-  //Initialize Thermometer input
-  GPIOPinTypeGPIOInput(I2CSDAPort, I2CSDA_PIN);
-  GPIOPinTypeGPIOInput(I2CSCLPort, I2CSCL_PIN);
-
-  /*
-   * Enable ADC Periph
-   */
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
-
-  GPIOPinTypeADC(AINPort, AIN);
-
-  /*
-   * Enable ADC with this Sequence
-   * 1. ADCSequenceConfigure()
-   * 2. ADCSequenceStepConfigure()
-   * 3. ADCSequenceEnable()
-   * 4. ADCProcessorTrigger();
-   * 5. Wait for sample sequence ADCIntStatus();
-   * 6. Read From ADC
-   */
-  ADCSequenceConfigure(ADC0_BASE, 0, ADC_TRIGGER_PROCESSOR, 0);
-  ADCSequenceStepConfigure(ADC0_BASE, 0, 0, ADC_CTL_IE | ADC_CTL_END | ADC_CTL_CH0);
-  ADCSequenceEnable(ADC0_BASE, 0);
-
-  /*
-   * Initialize the OLED
-   */
-  OrbitOledInit();
-
-  /*
-   * Reset flags
-   */
-  chSwtCur = 0;
-  chSwtPrev = 0;
-  fClearOled = true;
-
-  /*
-    * Enable I2C Peripheral
-    */
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
-
-    /*
-    * Set I2C GPIO pins
-    */
-    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
-    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
-    GPIOPinConfigure(I2CSCL);
-    GPIOPinConfigure(I2CSDA);
-
-    /*
-    * Setup I2C
-    */
-    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
-
-    /* Initialize the Accelerometer
-    *
-    */
-    GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
-
-    rgchWriteAcclX[0] = chPwrCtlReg;
-    rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
-
-    rgchWriteAcclY[0] = chPwrCtlReg;
-    rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
-
-    rgchWriteAcclZ[0] = chPwrCtlReg;
-    rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
 
 }
 

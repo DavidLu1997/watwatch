@@ -59,13 +59,8 @@ int activeMenu = MAIN;
 //Past Range to store heartbeat data
 #define HEART_RANGE 60000 //1 minute
 
-//Acceleration data memory locations
-#define	X_ADDR 0x32
-#define	Y_ADDR 0x34
-#define	Z_ADDR 0x36
-
 //Step Tracking Params
-#define STEP_SENSITIVITY 100.0 //Higher the number = less sensitive
+#define STEP_SENSITIVITY 70 //Higher the number = less sensitive
 #define STEP_DISTANCE 0.7874 //Distance travelled per step in m
 #define WEIGHT 70 //Weight of user in kg
 
@@ -75,6 +70,7 @@ int activeMenu = MAIN;
 
 //Number of steps since start
 int steps = 0;
+int totalAss = 0;
 
 //Number of heartbeats since start
 int beats = 0;
