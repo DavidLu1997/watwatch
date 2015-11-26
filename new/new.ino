@@ -69,17 +69,12 @@
           increasing = false;
         }
         OrbitOledClear();
-        pot = analogRead(A0);
-        
-        if (increasing) {
-          pot = analogRead(A0);
-          pot = pot / 6;
-          value += pot;
+        if (pot > 500) {
+          pot = 500;
         }
-        else if (increasing == false) {
+        else if (pot <= 500) {
           pot = analogRead(A0);
-          pot = pot / 6;
-          value -= pot;
+          pot /= 8;
         }
         
         //Displaying steps number
