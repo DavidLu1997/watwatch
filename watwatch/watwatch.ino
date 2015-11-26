@@ -1,12 +1,12 @@
 extern "C" {
-#include <delay.h>
-#include <FillPat.h>
-#include <I2CEEPROM.h>
-#include <LaunchPad.h>
-#include <OrbitBoosterPackDefs.h>
-#include <OrbitOled.h>
-#include <OrbitOledChar.h>
-#include <OrbitOledGrph.h>
+	#include <delay.h>
+	#include <FillPat.h>
+	#include <I2CEEPROM.h>
+	#include <LaunchPad.h>
+	#include <OrbitBoosterPackDefs.h>
+	#include <OrbitOled.h>
+	#include <OrbitOledChar.h>
+	#include <OrbitOledGrph.h>
 }
 
 #include "watch.h"
@@ -25,12 +25,10 @@ void setup()
   	
 }
 
-void loop()
-{
+void loop() {
 	//Serial.println(millis());
 	//getAccelerationData();
 	//Serial.println(data[millis() % STEP_RANGE]);
 	drawMenu();
 	delay(100);
 }
-

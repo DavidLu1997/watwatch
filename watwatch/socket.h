@@ -115,26 +115,30 @@ void drawMenu() {
         
         OrbitOledSetCursor(5, 3);
         OrbitOledPutString(":");
+
+        //Convert ints to strings, then prints them to the screen
+        itoa(hours, stringHours, 10);
+        OrbitOledSetCursor(3, 2);
+        OrbitOledPutString(stringHours);
         
         //Prints minutes
         itoa(minutes, stringMinutes, 10);
         OrbitOledSetCursor(7, 3);
         OrbitOledPutString(stringMinutes);
-        OrbitOledUpdate;
         
         OrbitOledSetCursor(9, 3);
         OrbitOledPutString(":");
-        
+
         //Printes seconds
         itoa(seconds, stringSeconds, 10);
         OrbitOledSetCursor(11, 3);
         OrbitOledPutString(stringSeconds);
         OrbitOledUpdate;
-        
+
         //Bottom button
         GPIOPinTypeGPIOInput(BTN1Port, BTN1);
         btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
+
         //Top Button
         GPIOPinTypeGPIOInput(BTN2Port, BTN2);
         btn2 = GPIOPinRead(BTN2Port, BTN2);
@@ -167,4 +171,3 @@ void highlightItem(int n){
 
 
 #endif //SOCKET_H
-
