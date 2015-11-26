@@ -179,59 +179,41 @@ void drawTrack() {
 	const int START_X = 0;
 	const int START_Y = 1;
 
-	//Strings for displaying to screen
-	char *stepsStr, *bpmStr, *tempStrDigit, *tempStrDecimal, *distStr, *calStr;
-
-  //Converting values to strings
-	itoa(steps, stepsStr, 10);
-	itoa(getBPM(), bpmStr, 10);
-	itoa((int)temp[millis() % TEMP_RANGE], tempStrDigit, 10);
-	itoa((int)(temp[millis() % TEMP_RANGE] * 100) % 100, tempStrDecimal, 10);
-	itoa(getDistance(), distStr, 10);
-	itoa(getCalories(), calStr, 10);
+	//Shows text
+	char *stepsStr, *bpmStr, *tempStr, *distStr, *calStr;
+	sprintf("Steps: %d", stepsStr, steps);
+	sprintf("BPM: %d", bpmStr, getBPM());
+	sprintf("Temperature %d", tempStr, temp[millis() % TEMP_RANGE]);
+	sprintf("Distance: %d", distStr, getDistance());
+	sprintf("Calories: %d", calStr, getCalories());
 
   if (trackScreen == 0) {
     //First screen of info
 
-  	//Number of Steps
-  	OrbitOledSetCursor(START_X, START_Y);
-  	OrbitOledPutString("Steps:");
-  	OrbitOledSetCursor(START_X + 5, START_Y);
-  	OrbitOledPutString(stepsStr);
-  	//Beats Per min
-  	OrbitOledSetCursor(START_X + 9, START_Y);
-  	OrbitOledPutString("BMP:");
-  	OrbitOledSetCursor(START_X + 12, START_Y);
-  	OrbitOledPutString(bpmStr);
-  	//Temperature
-  	OrbitOledSetCursor(START_X, START_Y + 2);
-  	OrbitOledPutString("Temperature:");
-  	OrbitOledSetCursor(START_X + 11, START_Y + 2);
-  	OrbitOledPutString(tempStrDigit);
-    OrbitOledSetCursor(START_X + 13, START_Y + 2);
-    OrbitOledPutString(".");
-  	OrbitOledSetCursor(START_X + 1, START_Y + 2);
-  	OrbitOledPutString(tempStrDecimal);
-
+	//Number of Steps
+	OrbitOledSetCursor(START_X, START_Y);
+	OrbitOledPutString(stepsStr);
+	//Beats Per min
+	OrbitOledSetCursor(START_X + 50, START_Y);
+	OrbitOledPutString(bpmStr);
+	//Temperature
+	OrbitOledSetCursor(START_X + 100, START_Y);
+	OrbitOledPutString(tempStr);
   }
   else if (trackScreen == 1) {
   	//2nd screen of info
 
-  	//Distance
-  	OrbitOledSetCursor(START_X, START_Y + 100);
-  	OrbitOledPutString("Distance:");
-  	OrbitOledSetCursor(START_X + 75, START_Y + 100);
-  	OrbitOledPutString(distStr);
-  	//Calories
-  	OrbitOledSetCursor(START_X + 100, START_Y + 100);
-  	OrbitOledPutString("Calories:");
-  	OrbitOledSetCursor(START_X + 150, START_Y + 100);
-  	OrbitOledPutString(calStr);
+	//Distance
+	OrbitOledSetCursor(START_X, START_Y + 100);
+	OrbitOledPutString(distStr);
+	//Calories
+	OrbitOledSetCursor(START_X + 100, START_Y + 100);
+	OrbitOledPutString(calStr);
   }
 
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
+
     //Top Button
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
@@ -249,7 +231,7 @@ void drawTrack() {
     }
     //Return to Main
     if (swt2 == SWT2) {
-        activeMenu = MAIN; 
+        activeMenu = MAIN;
     }
     if (swt1 == SWT1) {
         trackScreen = 1;
@@ -257,6 +239,15 @@ void drawTrack() {
     else {
         trackScreen = 0;
     }
+
+	//Listen for changes in input
+	long val1 = GPIOPinRead(BTN1Port, BTN1);
+	long val2 = GPIOPinRead(BTN2Port, BTN2);
+	if (val1 == BTN1){
+		steps = 0;
+	} else if (val2 == BTN2){
+		beats = 0;
+	} //TODO: Add an else if to check for the switch
 
 }
 
@@ -267,9 +258,8 @@ int getBPM(){
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
 void checkStep() {
 	//Calculate average acceleration over STEP_RANGE
-	int i;
 	double avg = 0;
-	for(i = 0; i < STEP_RANGE; i++) {
+	for(int i = 0; i < STEP_RANGE; i++) {
 		avg += data[i];
     data[i] = 0;
 	}

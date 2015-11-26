@@ -43,6 +43,11 @@ int timeValue;
 char timerDisplay[2];
 int option = 0;
 
+//Current Alarm
+#define HOUR 0
+#define MIN 1
+int currentAlarm = -1, unit = HOUR;
+
 //Stopwatch
 int stopwatch = 0;
 bool stopwatchRunning = false;
@@ -92,7 +97,7 @@ void drawWatch() {
 	//Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
+
     //Top Button
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
@@ -130,11 +135,11 @@ void drawTimer() {
 	    //Display Title
         OrbitOledSetCursor(4 , 1);
         OrbitOledPutString("Timer: ");
-        
+
         //Read pot
         pot = analogRead(A0);
         pot /= 8;
-        
+
         //Displays timer value
         timeValue = pot;
         itoa(timeValue,timerDisplay,10);
@@ -152,13 +157,13 @@ void drawTimer() {
         }
         else if (option == 2) {
 	        OrbitOledSetCursor(11,3);
-	        OrbitOledPutString("hour");         
+	        OrbitOledPutString("hour");
         }
 
         //Bottom button
 	    GPIOPinTypeGPIOInput(BTN1Port, BTN1);
 	    btn1 = GPIOPinRead(BTN1Port, BTN1);
-	        
+
 	    //Top Button
 	    GPIOPinTypeGPIOInput(BTN2Port, BTN2);
 	    btn2 = GPIOPinRead(BTN2Port, BTN2);
@@ -168,7 +173,7 @@ void drawTimer() {
 	    swt1 = GPIOPinRead(SWT1Port, SWT1);
 	    swt2 = GPIOPinRead(SWT2Port, SWT2);
 
-               
+
        //Change type of input when button is pressed, and will loop
        if (btn1==BTN1) {
 	         if (option <2) {
@@ -178,7 +183,7 @@ void drawTimer() {
 	           option = 0;
 	         }
        }
-       
+
        if(btn2==BTN2) {
          //start counting down...?
        }
@@ -189,9 +194,34 @@ void drawTimer() {
 
 }
 
-//Draw alarm
-void drawAlarm() {
 
+//Page to select alarm
+void drawAlarm(){
+	//TODO: IDK what the UI for this should be
+}
+
+//Draw alarm
+void setAlarm(int alarm) {
+	const int MAX_POT_VAL = 5000; //Maybe its more?
+	//Checks input
+	int pot = analogRead(0);
+	long val1 = GPIOPinRead(BTN1Port, BTN1);
+	long val2 = GPIOPinRead(BTN2Port, BTN2);
+	if (val1 == BTN1){
+		unit = !unit;
+	} else if (val2 == BTN2){
+		activeMenu = WATCH;
+	}
+	if (unit == HOUR){
+		alarms[alarm].hour = ((double)pot) * 24 / MAX_POT_VAL;
+	} else{
+		alarms[alarm].minute = ((double)pot) * 60 / MAX_POT_VAL;
+	}
+	//Prints stuff
+	char *str;
+	sprintf("Alarm: %d:%d", str, alarms[alarm].hour, alarms[alarm].minute);
+	OrbitOledSetCursor(10, 10);
+	OrbitOledPutString(str);
 }
 
 //Update Timer, continuously called
@@ -304,7 +334,7 @@ void drawStopWatch(){
 	//Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
     btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
+
     //Top Button
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
