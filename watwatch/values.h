@@ -142,4 +142,33 @@ int currentAlarmVal = -1, unit = HOUR;
 #define PAUSE 0
 #define RESET 1
 
+//Current date
+struct date current;
+
+//Alarms
+#define MAX_ALARMS 100
+struct date currentAlarm;
+struct date alarms[MAX_ALARMS];
+int alarmSize = 0;
+
+//Timers
+#define MAX_TIMERS 100
+int timers[MAX_TIMERS];
+int timerSize = 0;
+
+//Stopwatch
+int stopwatch = 0;
+bool stopwatchRunning = false;
+
+long flashed = 0;
+long flashedRed = 0;
+
+//Variables for displaying steps
+int step;
+char stringSteps[5];
+int set = 0;
+
+//Last
+int last = 0;
+
 #endif

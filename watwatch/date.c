@@ -1,23 +1,4 @@
-//Misc.h
-//Used for miscellaneous functions
-
-#ifndef MISC_H
-#define MISC_H
-
-#include "Energia.h"
-
-#include "values.h"
-
-//Declarations
-struct date difference(struct date a, struct date b);
-int timeElapsedMs(struct date a, struct date b);
-int timeElapsedS(struct date a, struct date b);
-struct date futureTime(struct date a, int s);
-void drawSettings();
-void drawSetTimes();
-void drawSetDate();
-void updateDate();
-struct date getDate();
+#include "date.h"
 
 //Get date
 struct date getDate() {
@@ -91,6 +72,3 @@ void drawSettings() {
 void drawSetTimes() {
 
 }
-
-#endif // MISC_H
-
