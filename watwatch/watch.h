@@ -12,6 +12,24 @@
 #define TIMER_DELAY 1000
 #define STOPWATCH_DELAY 1
 
+//Declarations
+void initWatch();
+void drawWatch();
+void updateTime();
+void updateTimer();
+void getWatch();
+void timer(int s);
+void checkAlarm();
+void setAlarm(struct date d);
+void startStopWatch();
+void pauseStopWatch();
+void stopStopWatch();
+void resetStopWatch();
+int getStopWatch();
+void drawTimer();
+void drawAlarm();
+void drawStopWatch();
+
 //Current date
 struct date current;
 
@@ -43,6 +61,26 @@ void drawWatch() {
 	sprintf("%d:%d:%d", time, current.hour, current.minute, current.second);
 	OrbitOledSetCursor(1, 2);
 	OrbitOledPutString(time);
+}
+
+//Checks and updates current time, continuously called
+void updateTime() {
+	current = getDate();
+}
+
+//Draw timer
+void drawTimer() {
+
+}
+
+//Draw alarm
+void drawAlarm() {
+
+}
+
+//Draw stopWatch
+void drawStopWatch() {
+
 }
 
 //Checks and updates current time, continuously called
