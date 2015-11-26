@@ -151,9 +151,9 @@ void drawSetSteps(){
 	//Listen for changes in input
 	if (btn1 == BTN1){
 		steps = pot;
-		activeMenu = SETTINGS;
+		setActiveMenu(SETTINGS);
 	} else if (btn2 == BTN2){
-		activeMenu = SETTINGS;
+		setActiveMenu(SETTINGS);
 	}
 	//Draws Steps
 	sprintf("Steps:%d", str, pot);
@@ -170,9 +170,9 @@ void drawSetHeartbeats(){
 	//Listen for changes in input
 	if (btn1 == BTN1){
 		beats = pot;
-		activeMenu = SETTINGS;
+		setActiveMenu(SETTINGS);
 	} else if (btn2 == BTN2){
-		activeMenu = SETTINGS;
+		setActiveMenu(SETTINGS);
 	} else{
 		//Draws Steps
 		sprintf("Heartbeat:%d", str, pot);

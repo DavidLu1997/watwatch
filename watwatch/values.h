@@ -60,6 +60,16 @@ long swt2;
 //Active menu
 int activeMenu = MAIN;
 
+long lastTimestamp = 0;
+
+void setActiveMenu(int screen){
+    long time = millis();
+    if((time - lastTimestamp)>200){
+        activeMenu = screen;
+        lastTimestamp = time;
+    }
+}
+
 //Menu delay
 #define MENU_DELAY 500
 

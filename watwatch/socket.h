@@ -80,23 +80,23 @@ void drawActiveMenu() {
                 //Goes to track screen
                 if (btn1 == BTN1) {
                     //OrbitOledClear();
-                    activeMenu = TRACK;
+                    setActiveMenu(TRACK);
                     break;
                 }
                 //Goes to watch screen
                 if (btn2 == BTN2) {
                     //OrbitOledClear();
-                    activeMenu = WATCH;
+                    setActiveMenu(WATCH);
                     set=1;
                     break;
                 }
                 //Turn light on when switch is flipped, should actually go to settings during implmentation
                 if (swt1 == SWT1) {
                     //OrbitOledClear();
-                    activeMenu = SETTINGS;
+                    setActiveMenu(SETTINGS);
                 }
                 else {
-                    activeMenu = MAIN;
+                    setActiveMenu(MAIN);
                 }
                 break;
             case TRACK:
@@ -117,7 +117,7 @@ void drawActiveMenu() {
                     }
                     //Return to Main
                     if (swt2 == SWT2) {
-                        activeMenu = MAIN; 
+                        setActiveMenu(MAIN); 
                         break;
                     }
                     if (swt1 == SWT1) {
@@ -144,21 +144,21 @@ void drawActiveMenu() {
 
                 //Goes to timer screen
                 /*if (btn1 == BTN1) {
-                    activeMenu = TIMER;
+                    setActiveMenu(TIMER);
                     break;
                 }
                 //Goes to alarm screen
                 if (btn2 == BTN2) {
-                    activeMenu = ALARM;
+                    setActiveMenu(ALARM);
                     break;
                 }
                 //Switch to stopwatch submenu
                 if (swt1 == SWT1) {
-                    activeMenu = STOPWATCH;
+                    setActiveMenu(STOPWATCH);
                     break;
                 }
                 if (swt2 == SWT2) {
-                    activeMenu = MAIN;
+                    setActiveMenu(MAIN);
                     break;
                 }*/
                 break;
