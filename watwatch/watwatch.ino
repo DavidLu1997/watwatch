@@ -42,7 +42,6 @@ void loop() {
 void updateLoop() {
 	  getAccelerationData(millis() % STEP_RANGE);
           getTemperature();
-	//getTemperature();
 	if(millis() - lastMS >= STEP_DELAY) {
 		checkStep();
                 checkHeart();
@@ -50,6 +49,8 @@ void updateLoop() {
 	}
 	//checkHeart();
 	updateTime();
+        updateTimer();
+        checkAlarm();
 
 	if(stopwatchRunning) {
 		runStopWatch();
