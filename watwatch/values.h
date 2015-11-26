@@ -29,6 +29,16 @@ int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || sta
 //Potentiometer
 int pot = 0;
 
+//Char variables for time
+char stringSeconds[2];
+char stringMinutes[2];
+char stringHours[2];
+
+//Long variables for time
+long hours = 19;
+long minutes = 0;
+long seconds = 0;
+
 //Buttons and Switches
 long btn1;
 long btn2;
@@ -48,7 +58,7 @@ long swt2;
 #define SETHEARTBEATS 9
 
 //Active menu
-int activeMenu = MAIN;
+int activeMenu = TRACK;
 
 //Menu delay
 #define MENU_DELAY 500

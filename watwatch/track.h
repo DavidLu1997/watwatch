@@ -49,8 +49,6 @@ char  chSwtPrev;
 //Variable for switching between 2 track screens
 int trackScreen = 0;
 
-
-
 short  dataX, dataY, dataZ;
 
   char  chPwrCtlReg = 0x2D;
@@ -179,7 +177,7 @@ void getAccelerationData(){
 //DRAW_DELAY
 void drawTrack() {
 	const int START_X = 0;
-	const int START_Y = 2;
+	const int START_Y = 1;
 
 	//Strings for displaying to screen
 	char *stepsStr, *bpmStr, *tempStrDigit, *tempStrDecimal, *distStr, *calStr;
@@ -201,18 +199,18 @@ void drawTrack() {
   	OrbitOledSetCursor(START_X + 5, START_Y);
   	OrbitOledPutString(stepsStr);
   	//Beats Per min
-  	OrbitOledSetCursor(START_X + 8, START_Y);
+  	OrbitOledSetCursor(START_X + 9, START_Y);
   	OrbitOledPutString("BMP:");
-  	OrbitOledSetCursor(START_X + 11, START_Y);
+  	OrbitOledSetCursor(START_X + 12, START_Y);
   	OrbitOledPutString(bpmStr);
   	//Temperature
-  	OrbitOledSetCursor(START_X, START_Y + 1);
+  	OrbitOledSetCursor(START_X, START_Y + 2);
   	OrbitOledPutString("Temperature:");
-  	OrbitOledSetCursor(START_X + 8, START_Y + 1);
+  	OrbitOledSetCursor(START_X + 11, START_Y + 2);
   	OrbitOledPutString(tempStrDigit);
-    OrbitOledSetCursor(START_X + 11, START_Y + 1);
+    OrbitOledSetCursor(START_X + 13, START_Y + 2);
     OrbitOledPutString(".");
-  	OrbitOledSetCursor(START_X + 12, START_Y + 1);
+  	OrbitOledSetCursor(START_X + 1, START_Y + 2);
   	OrbitOledPutString(tempStrDecimal);
 
   }
@@ -240,23 +238,20 @@ void drawTrack() {
 
     GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
     swt1 = GPIOPinRead(SWT1Port, SWT1);
+    swt2 = GPIOPinRead(SWT2Port, SWT2);
 
     //Goes to track screen
     if (btn1 == BTN1) {
-        activeMenu = TRACK;
+        steps = 0;
     }
-    //Goes to watch screen
     if (btn2 == BTN2) {
-        activeMenu = WATCH;
+        //Reset BPM
     }
-    //Turn light on when switch is flipped, should actually go to settings during implmentation
-    if (swt1 == SWT1) {
-        //activeMenu = SETTINGS; Needs to be changed
-    }
-    else {
-      
-    }
+    //Return to Main
     if (swt2 == SWT2) {
+        activeMenu = MAIN; 
+    }
+    if (swt1 == SWT1) {
         trackScreen = 1;
     }
     else {

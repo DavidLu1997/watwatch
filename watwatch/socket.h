@@ -10,16 +10,6 @@
 int step;
 char stringSteps[5];
 
-//Int variables for time
-long hours = 19;
-long minutes = 0;
-long seconds = 0;
-
-//Char variables for time
-char stringSeconds[2];
-char stringMinutes[2];
-char stringHours[2];
-
 //Declarations
 void initSocket();
 void drawMenu();
@@ -130,6 +120,7 @@ void drawMenu() {
     GPIOPinTypeGPIOInput(BTN2Port, BTN2);
     btn2 = GPIOPinRead(BTN2Port, BTN2);
 
+    //Right Switch
     GPIOPinTypeGPIOInput(SWTPort, SWT1 | SWT2);
     swt1 = GPIOPinRead(SWT1Port, SWT1);
 
