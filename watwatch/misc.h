@@ -21,7 +21,6 @@ struct date getDate();
 
 //Get date
 struct date getDate() {
-  updateDate();
   return currentDate;
 }
 
