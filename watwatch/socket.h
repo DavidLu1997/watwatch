@@ -7,14 +7,14 @@
 
 extern "C" {
   struct date {
-  int year;
-  int month;
-  int day;
-  int hour;
-  int minute;
-  int second;
-  int ms;
-};
+	  int year;
+	  int month;
+	  int day;
+	  int hour;
+	  int minute;
+	  int second;
+	  int ms;
+	};
   struct date getDate();
 }
 
@@ -102,35 +102,35 @@ void drawMenu() {
         hours = getDate().hour;
         minutes = getDate().minute;
         seconds = getDate().second;
-        
+
         OrbitOledClear();
         //Convert ints to strings, then prints them to the screen
-        itoa(hours, stringHours, 10); 
+        itoa(hours, stringHours, 10);
         OrbitOledSetCursor(3, 2);
         OrbitOledPutString(stringHours);
-        
+
         OrbitOledSetCursor(5, 2);
         OrbitOledPutString(":");
-        
+
         //Prints minutes
         itoa(minutes, stringMinutes, 10);
         OrbitOledSetCursor(7, 2);
         OrbitOledPutString(stringMinutes);
         OrbitOledUpdate;
-        
+
         OrbitOledSetCursor(9, 2);
         OrbitOledPutString(":");
-        
+
         //Printes seconds
         itoa(seconds, stringSeconds, 10);
         OrbitOledSetCursor(11, 2);
         OrbitOledPutString(stringSeconds);
         OrbitOledUpdate;
-        
+
         //Bottom button
         GPIOPinTypeGPIOInput(BTN1Port, BTN1);
         btn1 = GPIOPinRead(BTN1Port, BTN1);
-        
+
         //Top Button
         GPIOPinTypeGPIOInput(BTN2Port, BTN2);
         btn2 = GPIOPinRead(BTN2Port, BTN2);
@@ -155,4 +155,3 @@ void highlightItem(int n){
 
 
 #endif //SOCKET_H
-

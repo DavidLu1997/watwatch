@@ -141,46 +141,46 @@ void getAccelerationData(){
     0, 0            };
 
   if(fClearOled == true) {
-    OrbitOledClear();
-    OrbitOledMoveTo(0,0);
-    OrbitOledSetCursor(0,0);
-    fClearOled = false;
+		OrbitOledClear();
+		OrbitOledMoveTo(0,0);
+		OrbitOledSetCursor(0,0);
+		fClearOled = false;
 
-    /*
-     * Enable I2C Peripheral
-     */
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
+		/*
+		* Enable I2C Peripheral
+		*/
+		SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
+		SysCtlPeripheralReset(SYSCTL_PERIPH_I2C0);
 
-    /*
-     * Set I2C GPIO pins
-     */
-    GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
-    GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
-    GPIOPinConfigure(I2CSCL);
-    GPIOPinConfigure(I2CSDA);
+		/*
+		* Set I2C GPIO pins
+		*/
+		GPIOPinTypeI2C(I2CSDAPort, I2CSDA_PIN);
+		GPIOPinTypeI2CSCL(I2CSCLPort, I2CSCL_PIN);
+		GPIOPinConfigure(I2CSCL);
+		GPIOPinConfigure(I2CSDA);
 
-    /*
-     * Setup I2C
-     */
-    I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
+		/*
+		* Setup I2C
+		*/
+		I2CMasterInitExpClk(I2C0_BASE, SysCtlClockGet(), false);
 
-    /* Initialize the Accelerometer
-     *
-     */
-    GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
+		/* Initialize the Accelerometer
+		*
+		*/
+		GPIOPinTypeGPIOInput(ACCL_INT2Port, ACCL_INT2);
 
-    rgchWriteAcclX[0] = chPwrCtlReg;
-    rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
+		rgchWriteAcclX[0] = chPwrCtlReg;
+		rgchWriteAcclX[1] = 1 << 3;    // sets Accl in measurement mode
+		I2CGenTransmit(rgchWriteAcclX, 1, WRITE, ACCLADDR);
 
-    rgchWriteAcclY[0] = chPwrCtlReg;
-    rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
+		rgchWriteAcclY[0] = chPwrCtlReg;
+		rgchWriteAcclY[1] = 1 << 3;    // sets Accl in measurement mode
+		I2CGenTransmit(rgchWriteAcclY, 1, WRITE, ACCLADDR);
 
-    rgchWriteAcclZ[0] = chPwrCtlReg;
-    rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
-    I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
+		rgchWriteAcclZ[0] = chPwrCtlReg;
+		rgchWriteAcclZ[1] = 1 << 3;    // sets Accl in measurement mode
+		I2CGenTransmit(rgchWriteAcclZ, 1, WRITE, ACCLADDR);
 
   }
 
@@ -206,7 +206,31 @@ void getAccelerationData(){
 //Draws current function, continuously called
 //DRAW_DELAY
 void drawTrack() {
-	return;
+	const int START_X = 1;
+	const int START_Y = 2;
+
+	const int Y_OFFSET = 3;
+	//------------LINE 1-------------
+	//Number of Steps
+	OrbitOledSetCursor(START_X, START_Y);
+	OrbitOledPutString("Steps:" + steps);
+	//Beats Per min
+	OrbitOledSetCursor(START_X + 50, START_Y);
+	OrbitOledPutString("BMP:" + getBPM());
+	//Temperature
+	OrbitOledSetCursor(START_X + 100, START_Y);
+	OrbitOledPutString("Temperature:" + getTemperature());
+	//--------------LINE 2-----------
+	//Distance
+	OrbitOledSetCursor(START_X, START_Y + 100);
+	OrbitOledPutString("Distance:" + getDistance());
+	//Calories
+	OrbitOledSetCursor(START_X + 100, START_Y + 100);
+	OrbitOledPutString("Calories:" + getCalories());
+}
+
+int getBPM(){
+	return 60;
 }
 
 //Check step, continuously called, returns 1 if step occurred in past STEP_RANGE ms
@@ -240,10 +264,10 @@ void checkHeart() {
   avg /= TEMP_RANGE;
   double avgDiff = 0;
   for(i = 0; i < TEMP_RANGE; i++) {
-     avgDiff += fabs(temp[i]-avg); 
+     avgDiff += fabs(temp[i]-avg);
   }
   avgDiff /= (TEMP_RANGE / BEAT_FACTOR);
-  
+
   if(avgDiff >= BEAT_SENSITIVITY) {
 	heartBeats[millis() / 1000 % HEART_RANGE]++;
   }
@@ -559,4 +583,3 @@ void DeviceInit()
 
 
 #endif // TRACK_H
-
