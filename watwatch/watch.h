@@ -31,6 +31,7 @@ struct date current;
 
 //Alarms
 #define MAX_ALARMS 100
+struct date currentAlarm;
 struct date alarms[MAX_ALARMS];
 int alarmSize = 0;
 
@@ -42,7 +43,7 @@ int timerSize = 0;
 //Current Alarm
 #define HOUR 0
 #define MIN 1
-int currentAlarm = -1, unit = HOUR;
+int currentAlarmVal = -1, unit = HOUR;
 
 //Stopwatch
 int stopwatch = 0;
@@ -145,12 +146,7 @@ void switchOption() {
 
 //Page to select alarm
 void drawAlarm(){
-	//TODO: IDK what the UI for this should be
-}
-
-//Draw alarm
-void setAlarm(int alarm) {
-	const int MAX_POT_VAL = 5000; //Maybe its more?
+	const int MAX_POT_VAL = 2000; //Maybe its more?
 	//Checks input
 	int pot = analogRead(0);
 	long val1 = GPIOPinRead(BTN1Port, BTN1);
@@ -158,16 +154,18 @@ void setAlarm(int alarm) {
 	if (val1 == BTN1){
 		unit = !unit;
 	} else if (val2 == BTN2){
+		alarms[alarmSize] = currentAlarm;
+		alarmSize++;
 		setActiveMenu(WATCH);
 	}
 	if (unit == HOUR){
-		alarms[alarm].hour = ((double)pot) * 24 / MAX_POT_VAL;
+		currentAlarm.hour = ((double)pot) * 24 / MAX_POT_VAL;
 	} else{
-		alarms[alarm].minute = ((double)pot) * 60 / MAX_POT_VAL;
+		currentAlarm.minute = ((double)pot) * 60 / MAX_POT_VAL;
 	}
 	//Prints stuff
 	char *str;
-	sprintf("Alarm: %d:%d", str, alarms[alarm].hour, alarms[alarm].minute);
+	sprintf("Alarm: %d:%d", str, currentAlarm.hour, currentAlarm.minute);
 	OrbitOledSetCursor(10, 10);
 	OrbitOledPutString(str);
 }
