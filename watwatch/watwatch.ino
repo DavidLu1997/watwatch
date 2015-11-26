@@ -26,13 +26,9 @@ void setup()
 }
 
 void loop() {
-	drawMenu();
+	drawActiveMenu();
 	updateLoop();
 	delay(1);
-}
-
-void drawActiveMenu() {
-	
 }
 
 //Update Loop, continuously calls functions that must be updated

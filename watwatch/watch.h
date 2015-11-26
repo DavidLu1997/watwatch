@@ -110,17 +110,6 @@ void drawAlarm() {
 
 }
 
-//Draw stopWatch
-void drawStopWatch() {
-
-}
-
-//Checks and updates current time, continuously called
-//TIME_DELAY
-void updateTime() {
-	current = getDate();
-}
-
 //Update Timer, continuously called
 //TIMER_DELAY
 void updateTimer() {
