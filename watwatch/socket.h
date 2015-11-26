@@ -58,7 +58,7 @@ void initSocket() {
 void drawMenu() {
 
 	//Draws menu every MENU_DELAY
-	if(millis() % MENU_DELAY) {
+        if(millis() % MENU_DELAY) {
         OrbitOledClear();
 
         step = getSteps();
@@ -120,7 +120,7 @@ void drawMenu() {
         digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, LOW);
         
-    }
+        }
 
     //Bottom button
     GPIOPinTypeGPIOInput(BTN1Port, BTN1);
