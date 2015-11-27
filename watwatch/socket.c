@@ -1,4 +1,13 @@
 #include "socket.h"
+#include "values.h"
+
+void setActiveMenu(int screen){
+    long time = millis();
+    if((time - lastTimestamp)>200){
+        activeMenu = screen;
+        lastTimestamp = time;
+    }
+}
 
 //Draws currently active menu
 void drawActiveMenu() {

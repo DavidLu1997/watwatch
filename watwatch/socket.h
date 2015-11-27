@@ -7,6 +7,7 @@
 #include "values.h"
 
 //Declarations
+void setActiveMenu();
 void initSocket();
 void drawMenu();
 void drawActiveMenu();

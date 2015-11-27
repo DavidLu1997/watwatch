@@ -62,10 +62,9 @@ void updateLoop() {
            getBPM();
           lastMS1 = millis(); 
         }
-	//checkHeart();
 	updateTime();
-        updateTimer();
-        checkAlarm();
+    updateTimer();
+    checkAlarm();
 
 	if(stopwatchRunning) {
 		runStopWatch();

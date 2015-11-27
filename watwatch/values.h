@@ -2,23 +2,17 @@
 #define VALUES_H
 
 struct date {
-  int year;
-  int month;
-  int day;
   int hour;
   int minute;
   int second;
   int ms;
 };
 
-//Hard coded begin date
-struct date startDate = {2015, 11, 26, 11, 30, 0, 0};
-
 //Current date
-struct date currentDate = startDate;
+struct date currentDate = {11, 30, 0, 0};
 
 //Hard coded day of month
-int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || startDate.year % 400 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30 ,31, 30, 31};
+//int month[] = {31, (startDate.year % 4 == 0 && startDate.year % 100 != 0) || startDate.year % 400 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30 ,31, 30, 31};
 
 
 #define DATE_DELAY 1
@@ -64,14 +58,6 @@ long lastTimestamp = 0;
 long lastTimestampValue = 0;
 long lastTimestampAlarm = 0;
 long lastStopValue = -2;
-
-void setActiveMenu(int screen){
-    long time = millis();
-    if((time - lastTimestamp)>200){
-        activeMenu = screen;
-        lastTimestamp = time;
-    }
-}
 
 //Menu delay
 #define MENU_DELAY 500

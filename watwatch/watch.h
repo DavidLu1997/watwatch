@@ -21,6 +21,7 @@ void pauseStopWatch();
 void stopStopWatch();
 void resetStopWatch();
 int getStopWatch();
+void runStopWatch();
 void drawTimer();
 void drawAlarm();
 void drawStopWatch();

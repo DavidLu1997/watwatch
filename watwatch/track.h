@@ -4,22 +4,25 @@
 #ifndef TRACK_H
 #define TRACK_H
 
-extern "C" {
-	#include <delay.h>
-	#include <FillPat.h>
-	#include <I2CEEPROM.h>
-	#include <LaunchPad.h>
-	#include <OrbitBoosterPackDefs.h>
-	#include <OrbitOled.h>
-	#include <OrbitOledChar.h>
-	#include <OrbitOledGrph.h>
-}
+#include <stdbool.h>
+#include <delay.h>
+#include <FillPat.h>
+#include <I2CEEPROM.h>
+#include <LaunchPad.h>
+#include <OrbitBoosterPackDefs.h>
+#include <OrbitOled.h>
+#include <OrbitOledChar.h>
+#include <OrbitOledGrph.h>
 #include "Energia.h"
 
 //Declarations
 int getActiveMenu();
 char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr);
-bool I2CGenIsNotIdle();
+int I2CGenIsNotIdle();
+void setup_accelerometer();
+int get_accelerometer_x();
+int get_accelerometer_y();
+int get_accelerometer_z();
 int get_accelerometer_internal(int address);
 void DeviceInit();
 void initTrack();

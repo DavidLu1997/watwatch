@@ -1,4 +1,5 @@
 #include "track.h"
+#include "values.h"
 
 // Note, I have no idea how this works but don't touch it!
 void setup_accelerometer() {
@@ -436,7 +437,7 @@ char I2CGenTransmit(char * pbData, int cSize, bool fRW, char bAddr) {
 
 }
 
-bool I2CGenIsNotIdle() {
+int I2CGenIsNotIdle() {
 
   return !I2CMasterBusBusy(I2C0_BASE);
 
