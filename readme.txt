@@ -5,3 +5,5 @@ Main code within the watwatch folder
 -values.h, all predefined values (timings, ranges, etc.)
 -watch.h, watch functions (clock, alarm, etc.)
 -watwatch.ino, main program, runs all checkers in a continuous loop
+
+Please see proposal PDF for more details.
